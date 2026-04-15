@@ -6,28 +6,28 @@
     android:layout_height="match_parent"
     android:background="@color/background_gray"
     android:fillViewport="true"
-    tools:context=".LoginActivity">
+    tools:context=".ui.LoginActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="24dp">
 
+        <!-- Logo -->
         <ImageView
-            android:id="@+id/ivLogo"
+            android:id="@+id/iv_logo"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="32dp"
-            android:src="@drawable/book"
-            />
+            android:layout_marginTop="48dp"
+            android:src="@drawable/book" />
 
         <TextView
-            android:id="@+id/tvAppTitle"
+            android:id="@+id/tv_app_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/ivLogo"
+            android:layout_below="@id/iv_logo"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
             android:text="ScanGrad"
@@ -36,72 +36,91 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/tvSubtitle"
+            android:id="@+id/tv_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tvAppTitle"
+            android:layout_below="@id/tv_app_title"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="4dp"
-            android:text="The Road To The Success"
+            android:text="Welcome back"
             android:textColor="@color/text_secondary"
             android:textSize="14sp" />
 
+        <!-- Login card -->
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cvLoginForm"
+            android:id="@+id/cv_login_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tvSubtitle"
+            android:layout_below="@id/tv_subtitle"
             android:layout_marginTop="32dp"
             app:cardBackgroundColor="@color/surface_white"
             app:cardCornerRadius="16dp"
             app:cardElevation="2dp"
             app:contentPadding="24dp">
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tvPhoneLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="PHONE NUMBER"
+                    android:text="EMAIL ADDRESS"
                     android:textColor="@color/text_secondary"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
                 <EditText
-                    android:id="@+id/etPhone"
+                    android:id="@+id/et_email"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:layout_below="@id/tvPhoneLabel"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/rounded_edittext_bg"
-                    android:hint="+972 50 123 4567"
-                    android:inputType="phone"
+                    android:hint="you@example.com"
+                    android:inputType="textEmailAddress"
+                    android:paddingHorizontal="16dp"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="PASSWORD"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/et_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/rounded_edittext_bg"
+                    android:hint="Your password"
+                    android:inputType="textPassword"
                     android:paddingHorizontal="16dp"
                     android:textSize="14sp" />
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnLogin"
+                    android:id="@+id/btn_login"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
-                    android:layout_below="@id/etPhone"
                     android:layout_marginTop="24dp"
                     android:backgroundTint="@color/primary_blue"
-                    android:text="Send SMS Code"
+                    android:text="Log In"
                     android:textAllCaps="false"
                     android:textSize="16sp"
                     app:cornerRadius="8dp" />
-
-            </RelativeLayout>
+            </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- Google -->
         <TextView
-            android:id="@+id/tvOrContinue"
+            android:id="@+id/tv_or_continue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/cvLoginForm"
+            android:layout_below="@id/cv_login_form"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="24dp"
             android:text="OR CONTINUE WITH"
@@ -110,11 +129,11 @@
             android:textStyle="bold" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnGoogle"
+            android:id="@+id/btn_google"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:layout_below="@id/tvOrContinue"
+            android:layout_below="@id/tv_or_continue"
             android:layout_marginTop="16dp"
             android:text="Continue with Google"
             android:textColor="@color/text_primary"
@@ -124,10 +143,11 @@
             app:iconTint="@null"
             app:strokeColor="@color/input_background" />
 
+        <!-- Sign-up link -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/btnGoogle"
+            android:layout_below="@id/btn_google"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="32dp"
             android:layout_marginBottom="24dp"
@@ -137,14 +157,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Don't have an account? "
-                android:textColor="@color/text_secondary" />
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/tvSignUp"
+                android:id="@+id/tv_sign_up"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Sign up"
                 android:textColor="@color/primary_blue"
+                android:textSize="14sp"
                 android:textStyle="bold" />
         </LinearLayout>
 

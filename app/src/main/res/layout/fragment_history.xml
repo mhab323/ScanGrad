@@ -101,6 +101,29 @@
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
+            <!-- Loading spinner — shown while Firestore fetch is in flight -->
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/btn_filters"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="48dp"
+                android:visibility="gone" />
+
+            <!-- Empty-state label — shown when the user has no submissions -->
+            <TextView
+                android:id="@+id/tv_empty_state"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/btn_filters"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="48dp"
+                android:text="No submissions yet."
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp"
+                android:visibility="gone" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_history_list"
                 android:layout_width="match_parent"

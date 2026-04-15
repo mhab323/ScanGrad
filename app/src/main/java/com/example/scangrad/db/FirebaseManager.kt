@@ -6,25 +6,88 @@ import android.util.Log
 import com.example.scangrad.R
 import com.example.scangrad.data.Submission
 import com.example.scangrad.data.UserSession
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.auth.PhoneAuthCredential
-import com.google.firebase.auth.PhoneAuthOptions
-import com.google.firebase.auth.PhoneAuthProvider
-import java.util.concurrent.TimeUnit
+import com.google.firebase.auth.UserProfileChangeRequest
 
 class FirebaseManager(private val activity: Activity) {
 
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
-    private var storedVerificationId: String? = null
+    // ── Email / Password ──────────────────────────────────────────────────────
 
+    /**
+     * Signs in an existing user with [email] and [password].
+     * On success, saves/updates the user profile in Firestore, populates
+     * [UserSession], then calls [onSuccess].
+     */
+    fun signInWithEmail(
+        email: String,
+        password: String,
+        onSuccess: () -> Unit,
+        onFailed: (String) -> Unit
+    ) {
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(activity) { task ->
+                if (task.isSuccessful) {
+                    val firebaseUser = auth.currentUser
+                    if (firebaseUser != null) {
+                        saveUserToFirestore(firebaseUser, onSuccess, onFailed)
+                    } else {
+                        onFailed("Sign-in succeeded but user is null")
+                    }
+                } else {
+                    onFailed(task.exception?.localizedMessage ?: "Login failed")
+                }
+            }
+    }
+
+    /**
+     * Creates a new Firebase Auth account with [email] and [password], sets
+     * [name] as the display name, saves the profile to Firestore, populates
+     * [UserSession], then calls [onSuccess].
+     */
+    fun signUpWithEmail(
+        name: String,
+        email: String,
+        password: String,
+        onSuccess: () -> Unit,
+        onFailed: (String) -> Unit
+    ) {
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener(activity) { task ->
+                if (!task.isSuccessful) {
+                    onFailed(task.exception?.localizedMessage ?: "Sign-up failed")
+                    return@addOnCompleteListener
+                }
+                val firebaseUser = auth.currentUser ?: run {
+                    onFailed("Account created but user object is null")
+                    return@addOnCompleteListener
+                }
+                val profileUpdate = UserProfileChangeRequest.Builder()
+                    .setDisplayName(name)
+                    .build()
+                firebaseUser.updateProfile(profileUpdate)
+                    .addOnCompleteListener { profileTask ->
+                        if (!profileTask.isSuccessful) {
+                            onFailed(profileTask.exception?.localizedMessage ?: "Profile update failed")
+                            return@addOnCompleteListener
+                        }
+                        // auth.currentUser now carries the updated displayName
+                        saveUserToFirestore(auth.currentUser!!, onSuccess, onFailed)
+                    }
+            }
+    }
+
+    // ── Google Sign-In ────────────────────────────────────────────────────────
 
     fun getGoogleSignInClient(): GoogleSignInClient {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -49,8 +112,7 @@ class FirebaseManager(private val activity: Activity) {
                     if (task.isSuccessful) {
                         val firebaseUser = auth.currentUser
                         if (firebaseUser != null) {
-                            UserSession.populate(firebaseUser)
-                            onSuccess()
+                            saveUserToFirestore(firebaseUser, onSuccess, onFailed)
                         } else {
                             onFailed("Sign-in succeeded but user is null")
                         }
@@ -64,79 +126,11 @@ class FirebaseManager(private val activity: Activity) {
         }
     }
 
-
-    fun sendPhoneOtp(
-        phoneNumber: String,
-        onCodeSent: () -> Unit,
-        onVerificationFailed: (String) -> Unit,
-        onLoginSuccess: () -> Unit
-    ) {
-        val callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-            override fun onVerificationCompleted(credential: PhoneAuthCredential) {
-                signInWithCredential(credential, onLoginSuccess, onVerificationFailed)
-            }
-
-            override fun onVerificationFailed(e: FirebaseException) {
-                Log.e("FirebaseManager", "Verification Failed", e)
-                onVerificationFailed(e.localizedMessage ?: "Verification Failed")
-            }
-
-            override fun onCodeSent(
-                verificationId: String,
-                token: PhoneAuthProvider.ForceResendingToken
-            ) {
-                storedVerificationId = verificationId
-                onCodeSent()
-            }
-        }
-
-        val options = PhoneAuthOptions.newBuilder(auth)
-            .setPhoneNumber(phoneNumber)
-            .setTimeout(60L, TimeUnit.SECONDS)
-            .setActivity(activity)
-            .setCallbacks(callbacks)
-            .build()
-
-        PhoneAuthProvider.verifyPhoneNumber(options)
-    }
-
-    fun verifyEnteredOtp(
-        code: String,
-        onLoginSuccess: () -> Unit,
-        onLoginFailed: (String) -> Unit
-    ) {
-        val verificationId = storedVerificationId
-        if (verificationId == null) {
-            onLoginFailed("Verification ID is missing. Request a new code.")
-            return
-        }
-
-        val credential = PhoneAuthProvider.getCredential(verificationId, code)
-        signInWithCredential(credential, onLoginSuccess, onLoginFailed)
-    }
-
-    private fun signInWithCredential(
-        credential: PhoneAuthCredential,
-        onSuccess: () -> Unit,
-        onFailed: (String) -> Unit
-    ) {
-        auth.signInWithCredential(credential)
-            .addOnCompleteListener(activity) { task ->
-                if (task.isSuccessful) {
-                    val firebaseUser = auth.currentUser
-                    if (firebaseUser != null) UserSession.populate(firebaseUser)
-                    onSuccess()
-                } else {
-                    onFailed(task.exception?.localizedMessage ?: "Login failed")
-                }
-            }
-    }
-
     // ── Session ───────────────────────────────────────────────────────────────
 
     /**
-     * Returns true and populates [UserSession] if a Firebase user is already
-     * cached locally, so the app never hits the network just to check auth state.
+     * Returns true and populates [UserSession] from the locally cached Firebase
+     * user — no network call needed just to check auth state on app launch.
      */
     fun isUserLoggedIn(): Boolean {
         val user = auth.currentUser ?: return false
@@ -150,7 +144,45 @@ class FirebaseManager(private val activity: Activity) {
         UserSession.clear()
     }
 
-    // ── Firestore ─────────────────────────────────────────────────────────────
+    // ── Firestore — user profile ──────────────────────────────────────────────
+
+    /**
+     * Saves (or merges) the authenticated user's profile into `users/{uid}`.
+     *
+     * [SetOptions.merge] ensures fields written by other processes are never
+     * overwritten. [UserSession] is populated and [onSuccess] is called only
+     * after Firestore confirms the write, so the local session always reflects
+     * a persisted record.
+     */
+    private fun saveUserToFirestore(
+        firebaseUser: FirebaseUser,
+        onSuccess: () -> Unit,
+        onFailed: (String) -> Unit
+    ) {
+        val userData = hashMapOf(
+            "uid"         to firebaseUser.uid,
+            "displayName" to firebaseUser.displayName.orEmpty(),
+            "email"       to firebaseUser.email.orEmpty(),
+            "photoUrl"    to firebaseUser.photoUrl?.toString().orEmpty(),
+            "phoneNumber" to firebaseUser.phoneNumber.orEmpty(),
+            "lastSignIn"  to FieldValue.serverTimestamp()
+        )
+
+        FirebaseFirestore.getInstance()
+            .collection("users")
+            .document(firebaseUser.uid)
+            .set(userData, SetOptions.merge())
+            .addOnSuccessListener {
+                UserSession.populate(firebaseUser)
+                onSuccess()
+            }
+            .addOnFailureListener { e ->
+                Log.e("FirebaseManager", "saveUserToFirestore failed", e)
+                onFailed(e.localizedMessage ?: "Failed to save user profile")
+            }
+    }
+
+    // ── Firestore — submissions ───────────────────────────────────────────────
 
     fun fetchRecentSubmissions(
         userId: String,
@@ -158,8 +190,8 @@ class FirebaseManager(private val activity: Activity) {
         onSuccess: (List<Submission>) -> Unit,
         onFailed: (String) -> Unit
     ) {
-        val db = FirebaseFirestore.getInstance()
-        db.collection("submissions")
+        FirebaseFirestore.getInstance()
+            .collection("submissions")
             .whereEqualTo("userId", userId)
             .orderBy("createdAt", com.google.firebase.firestore.Query.Direction.DESCENDING)
             .limit(limit)
@@ -171,6 +203,32 @@ class FirebaseManager(private val activity: Activity) {
             .addOnFailureListener { e ->
                 Log.e("FirebaseManager", "fetchRecentSubmissions failed", e)
                 onFailed(e.localizedMessage ?: "Failed to fetch submissions")
+            }
+    }
+
+    /**
+     * Fetches every submission for [userId], newest first.
+     * The `whereEqualTo + orderBy` combo requires a composite Firestore index;
+     * if missing, the exception message will contain the Firebase Console link
+     * to create it.
+     */
+    fun fetchUserHistory(
+        userId: String,
+        onSuccess: (List<Submission>) -> Unit,
+        onFailed: (String) -> Unit
+    ) {
+        FirebaseFirestore.getInstance()
+            .collection("submissions")
+            .whereEqualTo("userId", userId)
+            .orderBy("createdAt", com.google.firebase.firestore.Query.Direction.DESCENDING)
+            .get()
+            .addOnSuccessListener { snapshot ->
+                val list = snapshot.documents.mapNotNull { it.toObject(Submission::class.java) }
+                onSuccess(list)
+            }
+            .addOnFailureListener { e ->
+                Log.e("FirebaseManager", "fetchUserHistory failed", e)
+                onFailed(e.localizedMessage ?: "Failed to fetch history")
             }
     }
 

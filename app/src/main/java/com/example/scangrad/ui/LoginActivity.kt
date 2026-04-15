@@ -7,7 +7,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.example.scangrad.databinding.ActivityLoginBinding
 import com.example.scangrad.db.FirebaseManager
-import com.google.android.gms.auth.api.signin.GoogleSignIn
 
 class LoginActivity : AppCompatActivity() {
 
@@ -19,10 +18,8 @@ class LoginActivity : AppCompatActivity() {
     ) { result ->
         firebaseManager.handleGoogleSignInResult(
             data      = result.data,
-            onSuccess = { navigateToDashboard() },
-            onFailed  = { error ->
-                Toast.makeText(this, "Error: $error", Toast.LENGTH_LONG).show()
-            }
+            onSuccess = { navigateToApp() },
+            onFailed  = { error -> toast("Error: $error") }
         )
     }
 
@@ -34,50 +31,54 @@ class LoginActivity : AppCompatActivity() {
 
         firebaseManager = FirebaseManager(this)
 
+        // Skip login screen if the user is already authenticated
         if (firebaseManager.isUserLoggedIn()) {
-            navigateToDashboard()
+            navigateToApp()
             return
         }
 
-        setupClickListeners()
+        setupListeners()
     }
 
-    private fun navigateToDashboard() {
-        startActivity(Intent(this, HostActivity::class.java))
-        finish()
-    }
-
-    private fun sendOTP(phoneNumber: String) {
-        firebaseManager.sendPhoneOtp(
-            phoneNumber         = phoneNumber,
-            onCodeSent          = {
-                Toast.makeText(this, "SMS Sent! Check your messages.", Toast.LENGTH_SHORT).show()
-                // TODO: Change UI to show an EditText for the 6-digit code
-            },
-            onVerificationFailed = { errorMessage ->
-                Toast.makeText(this, "Error: $errorMessage", Toast.LENGTH_LONG).show()
-            },
-            onLoginSuccess      = { navigateToDashboard() }
-        )
-    }
-
-    private fun setupClickListeners() {
+    private fun setupListeners() {
         binding.btnLogin.setOnClickListener {
-            val phoneNumber = binding.etPhone.text.toString().trim()
-            if (phoneNumber.isNotEmpty()) {
-                sendOTP(phoneNumber)
-            } else {
-                Toast.makeText(this, "Please enter a valid phone number", Toast.LENGTH_SHORT).show()
+            val email    = binding.etEmail.text.toString().trim()
+            val password = binding.etPassword.text.toString()
+
+            when {
+                email.isEmpty()    -> toast("Please enter your email address")
+                password.isEmpty() -> toast("Please enter your password")
+                else               -> signIn(email, password)
             }
         }
 
         binding.btnGoogle.setOnClickListener {
-            val signInIntent = firebaseManager.getGoogleSignInClient().signInIntent
-            googleSignInLauncher.launch(signInIntent)
+            googleSignInLauncher.launch(firebaseManager.getGoogleSignInClient().signInIntent)
         }
 
         binding.tvSignUp.setOnClickListener {
-            Toast.makeText(this, "Navigate to Sign Up", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, SignupActivity::class.java))
         }
     }
+
+    private fun signIn(email: String, password: String) {
+        binding.btnLogin.isEnabled = false
+        firebaseManager.signInWithEmail(
+            email     = email,
+            password  = password,
+            onSuccess = { navigateToApp() },
+            onFailed  = { error ->
+                binding.btnLogin.isEnabled = true
+                toast("Error: $error")
+            }
+        )
+    }
+
+    private fun navigateToApp() {
+        startActivity(Intent(this, HostActivity::class.java))
+        finish()
+    }
+
+    private fun toast(msg: String) =
+        Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
 }

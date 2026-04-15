@@ -38,14 +38,6 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <ImageView
-                android:id="@+id/iv_profile"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_alignParentEnd="true"
-                android:background="@color/text_primary"
-                android:src="@android:drawable/ic_menu_myplaces" />
-
             <TextView
                 android:id="@+id/tv_greeting"
                 android:layout_width="wrap_content"
