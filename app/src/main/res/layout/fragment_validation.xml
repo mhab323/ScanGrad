@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_gray">
+
+    <LinearLayout
+        android:id="@+id/layout_actions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/surface_white"
+        android:elevation="4dp"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:weightSum="3">
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_button_secondary"
+            android:text="Cancel"
+            android:textAllCaps="false"
+            android:textColor="@color/surface_white"
+            android:textSize="13sp" />
+
+        <Button
+            android:id="@+id/btn_retake"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginHorizontal="4dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_button_secondary"
+            android:text="Retake"
+            android:textAllCaps="false"
+            android:textColor="@color/surface_white"
+            android:textSize="13sp" />
+
+        <Button
+            android:id="@+id/btn_confirm"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="4dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_button_primary"
+            android:text="Confirm"
+            android:textAllCaps="false"
+            android:textColor="@color/surface_white"
+            android:textSize="13sp" />
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/layout_actions"
+        android:scrollbars="none">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iv_captured_photo"
+                android:layout_width="match_parent"
+                android:layout_height="240dp"
+                android:background="@color/input_background"
+                android:contentDescription="Captured document photo"
+                android:scaleType="centerCrop" />
+
+            <RelativeLayout
+                android:id="@+id/layout_form"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/iv_captured_photo"
+                android:layout_marginTop="-1dp"
+                android:padding="24dp">
+
+                <TextView
+                    android:id="@+id/tv_form_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Verify Details"
+                    android:textColor="@color/text_primary"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_form_subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_form_title"
+                    android:layout_marginTop="4dp"
+                    android:text="Review and correct the extracted information."
+                    android:textColor="@color/text_secondary"
+                    android:textSize="13sp" />
+
+                <!-- Course Code -->
+                <TextView
+                    android:id="@+id/lbl_course_code"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_form_subtitle"
+                    android:layout_marginTop="24dp"
+                    android:text="COURSE CODE"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/et_course_code"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_below="@id/lbl_course_code"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/bg_rounded_input"
+                    android:inputType="text"
+                    android:paddingHorizontal="16dp"
+                    android:textColor="@color/text_primary"
+                    android:textSize="15sp" />
+
+                <!-- Department -->
+                <TextView
+                    android:id="@+id/lbl_department"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/et_course_code"
+                    android:layout_marginTop="16dp"
+                    android:text="DEPARTMENT"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/et_department"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_below="@id/lbl_department"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/bg_rounded_input"
+                    android:inputType="text"
+                    android:paddingHorizontal="16dp"
+                    android:textColor="@color/text_primary"
+                    android:textSize="15sp" />
+
+                <!-- Title -->
+                <TextView
+                    android:id="@+id/lbl_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/et_department"
+                    android:layout_marginTop="16dp"
+                    android:text="EXAM / ASSIGNMENT TITLE"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/et_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_below="@id/lbl_title"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/bg_rounded_input"
+                    android:inputType="text"
+                    android:paddingHorizontal="16dp"
+                    android:textColor="@color/text_primary"
+                    android:textSize="15sp" />
+
+                <!-- Date -->
+                <TextView
+                    android:id="@+id/lbl_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/et_title"
+                    android:layout_marginTop="16dp"
+                    android:text="DATE"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/et_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_below="@id/lbl_date"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/bg_rounded_input"
+                    android:inputType="text"
+                    android:paddingHorizontal="16dp"
+                    android:textColor="@color/text_primary"
+                    android:textSize="15sp" />
+
+            </RelativeLayout>
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp"
+    android:background="@drawable/rounded_edittext_bg"
+    android:padding="16dp"
+    android:elevation="1dp">
+
+    <ImageView
+        android:id="@+id/iv_history_icon"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/text_primary"
+        android:scaleType="centerCrop" />
+
+    <RelativeLayout
+        android:id="@+id/container_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/iv_history_icon"
+        android:layout_marginStart="16dp"
+        android:layout_alignParentTop="true">
+
+        <TextView
+            android:id="@+id/tv_course_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CS-403"
+            android:textColor="@color/primary_blue"
+            android:textSize="10sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_history_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_course_code"
+            android:layout_marginTop="2dp"
+            android:text="Advanced Quantum Algorithms"
+            android:textColor="@color/text_primary"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_history_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_history_title"
+            android:layout_marginTop="4dp"
+            android:text="Oct 24, 2023 • Mid-Term Assessment"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/container_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/iv_history_icon"
+        android:layout_alignStart="@id/iv_history_icon"
+        android:layout_alignEnd="@id/iv_history_icon"
+        android:layout_marginTop="16dp"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/tv_score_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="SCORE"
+            android:textColor="@color/text_secondary"
+            android:textSize="9sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_score_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_score_label"
+            android:layout_centerHorizontal="true"
+            android:text="94"
+            android:textColor="@color/primary_blue"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_score_max"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/tv_score_value"
+            android:layout_alignBaseline="@id/tv_score_value"
+            android:text="/100"
+            android:textColor="@color/text_secondary"
+            android:textSize="9sp" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_history_badge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/container_score"
+        android:layout_alignBottom="@id/container_score"
+        android:layout_toEndOf="@id/container_score"
+        android:layout_marginStart="16dp"
+        android:gravity="center"
+        android:paddingHorizontal="16dp"
+        android:text="High Confidence"
+        android:textColor="#FFFFFF"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@id/container_score"
+        android:layout_alignBottom="@id/container_score"
+        android:src="@android:drawable/ic_media_next"
+        app:tint="@color/input_background" />
+
+</RelativeLayout>

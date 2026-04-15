@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_gray">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="88dp"
+        android:scrollbars="none">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="30dp">
+
+            <ImageView
+                android:id="@+id/iv_app_logo"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentStart="true"
+                android:src="@drawable/book"
+                 />
+
+            <TextView
+                android:id="@+id/tv_app_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/iv_app_logo"
+                android:layout_marginStart="8dp"
+                android:text="ScanGrad"
+                android:textColor="@color/primary_blue"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_history_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/iv_app_logo"
+                android:layout_marginTop="32dp"
+                android:text="Submission History"
+                android:textColor="@color/primary_blue"
+                android:textSize="28sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_history_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_history_header"
+                android:layout_marginTop="4dp"
+                android:text="Archive of your academic journey and evaluated transcripts."
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp" />
+
+            <RelativeLayout
+                android:id="@+id/layout_search"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_below="@id/tv_history_desc"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/bg_rounded_input"
+                android:paddingHorizontal="12dp">
+
+                <ImageView
+                    android:id="@+id/iv_search_icon"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:src="@android:drawable/ic_menu_search"
+                    app:tint="@color/text_secondary" />
+
+                <EditText
+                    android:id="@+id/et_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_toEndOf="@id/iv_search_icon"
+                    android:layout_marginStart="8dp"
+                    android:background="@null"
+                    android:hint="Search exams, courses, or dates..."
+                    android:textColorHint="@color/text_secondary"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/btn_filters"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_below="@id/layout_search"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_rounded_input"
+                android:gravity="center"
+                android:text="Filters"
+                android:textColor="@color/primary_blue"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_history_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/btn_filters"
+                android:layout_marginTop="24dp"
+                android:nestedScrollingEnabled="false"
+                tools:listitem="@layout/item_history_card" />
+
+            <TextView
+                android:id="@+id/tv_load_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rv_history_list"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="24dp"
+                android:text="Load more history"
+                android:textColor="@color/primary_blue"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_display_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_load_more"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="4dp"
+                android:text="Displaying 4 of 28 submissions"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp" />
+
+        </RelativeLayout>
+    </ScrollView>
+</RelativeLayout>
