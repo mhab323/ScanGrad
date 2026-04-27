@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+httpx
+pillow
+pytesseract
+anthropic
+chromadb
+sentence-transformers
+python-dotenv
