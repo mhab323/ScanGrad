@@ -84,6 +84,11 @@ class DashboardFragment : Fragment() {
             )
         }
 
+        override fun onResume() {
+            super.onResume()
+            fetchDashboardData()
+        }
+
         override fun onDestroyView() {
             super.onDestroyView()
             _binding = null

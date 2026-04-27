@@ -6,16 +6,21 @@ import android.graphics.pdf.PdfRenderer
 import android.net.Uri
 import android.os.Bundle
 import android.os.ParcelFileDescriptor
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.lifecycleScope
 import com.example.scangrad.data.Submission
 import com.example.scangrad.data.UserSession
 import com.example.scangrad.databinding.FragmentValidationBinding
 import com.example.scangrad.db.FirebaseManager
+import com.example.scangrad.network.EvaluationRepository
+import com.example.scangrad.network.EvaluationRequest
+import kotlinx.coroutines.launch
 import java.io.File
 
 class ValidationFragment : Fragment() {
@@ -96,31 +101,78 @@ class ValidationFragment : Fragment() {
     }
 
     private fun onConfirmClicked() {
-        val submission = buildSubmission()
+        val localUri = Uri.parse(imageUriString)
         binding.btnConfirm.isEnabled = false
+        binding.btnCancel.isEnabled = false
+        binding.btnRetake.isEnabled = false
+        binding.pbUpload.visibility = View.VISIBLE
+        binding.tvUploadStatus.visibility = View.VISIBLE
 
-        FirebaseManager(requireActivity()).saveSubmission(
-            submission = submission,
-            onSuccess = {
-                Toast.makeText(requireContext(), "Submission saved!", Toast.LENGTH_SHORT).show()
-                requireActivity().supportFragmentManager
-                    .popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        val firebaseManager = FirebaseManager(requireActivity())
+
+        firebaseManager.uploadFileToStorage(
+            fileUri = localUri,
+            userId = UserSession.uid,
+            onSuccess = { downloadUrl ->
+                binding.tvUploadStatus.text = "Saving submission..."
+                val submission = buildSubmission(imageUri = downloadUrl)
+
+                firebaseManager.saveSubmission(
+                    submission = submission,
+                    onSuccess = { submissionId ->
+                        Toast.makeText(requireContext(), "Submission saved!", Toast.LENGTH_SHORT).show()
+                        requireActivity().supportFragmentManager
+                            .popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                        // Fire FastAPI grading in the background after navigating back.
+                        requireActivity().lifecycleScope.launch {
+                            val request = EvaluationRequest(
+                                submissionId = submissionId,
+                                courseCode = submission.courseCode,
+                                extractedText = "",
+                                imageUrl = downloadUrl
+                            )
+                            val result = EvaluationRepository().sendForGrading(request)
+                            result.onSuccess { response ->
+                                firebaseManager.updateSubmissionGraded(
+                                    submissionId = submissionId,
+                                    score = response.finalScore,
+                                    feedback = response.feedback,
+                                    confidenceLevel = response.confidenceLevel
+                                )
+                            }.onFailure { e ->
+                                Log.e("ValidationFragment", "FastAPI grading failed", e)
+                            }
+                        }
+                    },
+                    onFailed = { error ->
+                        resetButtons()
+                        Toast.makeText(requireContext(), "Save failed: $error", Toast.LENGTH_SHORT).show()
+                    }
+                )
             },
             onFailed = { error ->
-                binding.btnConfirm.isEnabled = true
-                Toast.makeText(requireContext(), "Save failed: $error", Toast.LENGTH_SHORT).show()
+                resetButtons()
+                Toast.makeText(requireContext(), "Upload failed: $error", Toast.LENGTH_SHORT).show()
             }
         )
     }
 
-    private fun buildSubmission(): Submission {
+    private fun resetButtons() {
+        binding.btnConfirm.isEnabled = true
+        binding.btnCancel.isEnabled = true
+        binding.btnRetake.isEnabled = true
+        binding.pbUpload.visibility = View.GONE
+        binding.tvUploadStatus.visibility = View.GONE
+    }
+
+    private fun buildSubmission(imageUri: String): Submission {
         return Submission(
             userId = UserSession.uid,
             courseCode = binding.etCourseCode.text.toString().trim(),
             department = binding.etDepartment.text.toString().trim(),
             title = binding.etTitle.text.toString().trim(),
             date = binding.etDate.text.toString().trim(),
-            imageUri = imageUriString,
+            imageUri = imageUri,
             status = "PENDING"
         )
     }

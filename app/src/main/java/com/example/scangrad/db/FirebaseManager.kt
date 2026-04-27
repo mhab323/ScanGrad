@@ -2,6 +2,7 @@ package com.example.scangrad.db
 
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import com.example.scangrad.R
 import com.example.scangrad.data.Submission
@@ -17,6 +18,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.UserProfileChangeRequest
+import com.google.firebase.storage.FirebaseStorage
 
 class FirebaseManager(private val activity: Activity) {
 
@@ -232,9 +234,32 @@ class FirebaseManager(private val activity: Activity) {
             }
     }
 
+    fun uploadFileToStorage(
+        fileUri: Uri,
+        userId: String,
+        onSuccess: (downloadUrl: String) -> Unit,
+        onFailed: (String) -> Unit
+    ) {
+        val fileName = "submissions/${userId}/${System.currentTimeMillis()}.pdf"
+        val storageRef = FirebaseStorage.getInstance().reference.child(fileName)
+
+        storageRef.putFile(fileUri)
+            .continueWithTask { task ->
+                if (!task.isSuccessful) throw task.exception!!
+                storageRef.downloadUrl
+            }
+            .addOnSuccessListener { uri ->
+                onSuccess(uri.toString())
+            }
+            .addOnFailureListener { e ->
+                Log.e("FirebaseManager", "uploadFileToStorage failed", e)
+                onFailed(e.localizedMessage ?: "Upload failed")
+            }
+    }
+
     fun saveSubmission(
         submission: Submission,
-        onSuccess: () -> Unit,
+        onSuccess: (String) -> Unit,
         onFailed: (String) -> Unit
     ) {
         val db = FirebaseFirestore.getInstance()
@@ -242,10 +267,36 @@ class FirebaseManager(private val activity: Activity) {
         val submissionWithId = submission.copy(id = docRef.id)
 
         docRef.set(submissionWithId)
-            .addOnSuccessListener { onSuccess() }
+            .addOnSuccessListener { onSuccess(docRef.id) }
             .addOnFailureListener { e ->
                 Log.e("FirebaseManager", "saveSubmission failed", e)
                 onFailed(e.localizedMessage ?: "Failed to save submission")
+            }
+    }
+
+    fun updateSubmissionGraded(
+        submissionId: String,
+        score: Int,
+        feedback: String,
+        confidenceLevel: String,
+        onSuccess: () -> Unit = {},
+        onFailed: (String) -> Unit = {}
+    ) {
+        FirebaseFirestore.getInstance()
+            .collection("submissions")
+            .document(submissionId)
+            .update(
+                mapOf(
+                    "status" to "GRADED",
+                    "score" to score,
+                    "feedback" to feedback,
+                    "confidenceLevel" to confidenceLevel
+                )
+            )
+            .addOnSuccessListener { onSuccess() }
+            .addOnFailureListener { e ->
+                Log.e("FirebaseManager", "updateSubmissionGraded failed", e)
+                onFailed(e.localizedMessage ?: "Failed to update submission")
             }
     }
 }

@@ -24,14 +24,16 @@ class RecentSubmissionsAdapter(
 
             when (SubmissionStatus.valueOf(submission.status)) {
                 SubmissionStatus.GRADED -> {
-                    binding.tvStatusBadge.text = "GRADED"
+                    binding.pbGrading.visibility = android.view.View.GONE
+                    binding.tvStatusBadge.visibility = android.view.View.VISIBLE
+                    val scoreText = if (submission.score >= 0) "GRADED ${submission.score}" else "GRADED"
+                    binding.tvStatusBadge.text = scoreText
                     binding.tvStatusBadge.setTextColor(Color.parseColor("#3F51B5"))
                     binding.tvStatusBadge.setBackgroundColor(Color.parseColor("#E8EAF6"))
                 }
                 SubmissionStatus.PENDING -> {
-                    binding.tvStatusBadge.text = "PENDING"
-                    binding.tvStatusBadge.setTextColor(Color.parseColor("#D84315"))
-                    binding.tvStatusBadge.setBackgroundColor(Color.parseColor("#FBE9E7"))
+                    binding.pbGrading.visibility = android.view.View.VISIBLE
+                    binding.tvStatusBadge.visibility = android.view.View.GONE
                 }
             }
         }

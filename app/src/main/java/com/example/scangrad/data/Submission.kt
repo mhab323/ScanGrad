@@ -12,6 +12,9 @@ data class Submission(
     val date: String = "",
     val imageUri: String = "",
     val status: String = SubmissionStatus.PENDING.name,
+    val score: Int = -1,
+    val feedback: String = "",
+    val confidenceLevel: String = "",
     @ServerTimestamp val createdAt: Date? = null
 )
 
