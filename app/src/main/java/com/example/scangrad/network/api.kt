@@ -14,7 +14,7 @@ interface FastApiService {
     ): Response<EvaluationResponse>
 
     object ApiClient {
-        private const val BASE_URL = "http://10.0.2.2:8000/"
+        private const val BASE_URL = "http://10.0.0.3:8000/"
 
         val fastApiService: FastApiService by lazy {
             Retrofit.Builder()
