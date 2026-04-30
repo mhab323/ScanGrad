@@ -4,8 +4,6 @@ An AI-powered grading platform for handwritten exams, built with Android (Kotlin
 
 ## 📸 App Screenshots
 
-*(Note: Add your screenshots to a folder named `screenshots` in the repository root for these to display correctly).*
-
 <div align="center">
   <img src="screenshots/camera_view.png" width="250" alt="Dashboard"/>
   &nbsp;&nbsp;&nbsp;
