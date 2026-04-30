@@ -88,7 +88,73 @@ class ValidationFragment : Fragment() {
     private fun setupListeners() {
         binding.btnCancel.setOnClickListener { onCancelClicked() }
         binding.btnRetake.setOnClickListener { onRetakeClicked() }
-        binding.btnConfirm.setOnClickListener { onConfirmClicked() }
+//        binding.btnConfirm.setOnClickListener { onConfirmClicked() }
+        binding.btnConfirm.setOnClickListener { showDemoSelectorDialog() }
+    }
+
+    private fun showDemoSelectorDialog() {
+        val options = arrayOf(
+            "Demo: Good Exam (96)",
+            "Demo: Mid Exam (72)",
+            "Demo: Bad Exam (45)",
+            "Run Normal App Flow"
+        )
+
+        android.app.AlertDialog.Builder(requireContext())
+            .setTitle("Select Prototype Scenario")
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> runMockEvaluation("good")
+                    1 -> runMockEvaluation("mid")
+                    2 -> runMockEvaluation("bad")
+                    3 -> onConfirmClicked()
+                }
+            }
+            .show()
+    }
+
+    private fun runMockEvaluation(mockId: String) {
+        binding.pbUpload.visibility = View.VISIBLE
+        binding.tvUploadStatus.visibility = View.VISIBLE
+        binding.tvUploadStatus.text = "Sending to FastAPI backend..."
+        binding.btnConfirm.isEnabled = false
+
+        requireActivity().lifecycleScope.launch {
+            val request = EvaluationRequest(
+                submissionId = mockId,
+                courseCode = "ENG-6003",
+                extractedText = "",
+                imageUrl = "demo_url_bypass"
+            )
+
+            val result = EvaluationRepository().sendForGrading(request)
+
+
+            binding.pbUpload.visibility = View.GONE
+            binding.tvUploadStatus.visibility = View.GONE
+            binding.btnConfirm.isEnabled = true
+
+            result.onSuccess { response ->
+                showResultDialog(response.finalScore, response.feedback, response.confidenceLevel)
+            }.onFailure { e ->
+                Toast.makeText(requireContext(), "Backend Error: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun showResultDialog(score: Int, feedback: String, confidence: String) {
+        val emoji = when {
+            score >= 90 -> "🏆"
+            score >= 70 -> "⚠️"
+            else -> "❌"
+        }
+
+        android.app.AlertDialog.Builder(requireContext())
+            .setTitle("$emoji Final Score: $score/100")
+            .setMessage("Confidence: $confidence\n\nFeedback:\n$feedback")
+            .setPositiveButton("Close") { dialog, _ -> dialog.dismiss() }
+            .setCancelable(false)
+            .show()
     }
 
     private fun onCancelClicked() {
