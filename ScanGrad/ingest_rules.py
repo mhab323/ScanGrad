@@ -1,17 +1,10 @@
 from embedder import embed
 from rag import add_rule
 
-COURSE_CODE = "ENG-ADV-B"  # English Advanced B
+COURSE_CODE = "ENG-ADV-B"
 
 rules = [
     # TODO: Add rubric entries derived from past exams.
-    # Each entry covers one question or grading policy chunk.
-    # Example structure:
-    # {
-    #     "id": "eng-adv-b-q1",
-    #     "course_code": COURSE_CODE,
-    #     "text": "Question 1 tests reading comprehension. Award ..."
-    # },
 ]
 
 for rule in rules:

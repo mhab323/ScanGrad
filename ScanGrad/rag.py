@@ -3,6 +3,7 @@ import chromadb
 _client = chromadb.PersistentClient(path="./chroma_db")
 _collection = _client.get_or_create_collection("grading_rules")
 
+
 def retrieve_rules(submission_embedding: list[float], course_code: str, top_k: int = 5) -> str:
     results = _collection.query(
         query_embeddings=[submission_embedding],
