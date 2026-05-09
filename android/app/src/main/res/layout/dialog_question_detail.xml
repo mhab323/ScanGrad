@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/surface_white"
+    android:padding="24dp">
+
+    <TextView
+        android:id="@+id/tv_question_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:text="QUESTION"
+        android:textColor="@color/text_secondary"
+        android:textSize="11sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_score_badge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/input_background"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="6dp"
+        android:text="0 / 0"
+        android:textColor="@color/primary_blue"
+        android:textSize="13sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_question_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_question_label"
+        android:layout_marginTop="6dp"
+        android:text="Question 1"
+        android:textColor="@color/text_primary"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_question_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_question_title"
+        android:layout_marginTop="12dp"
+        android:text="Question text goes here..."
+        android:textColor="@color/text_primary"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_feedback_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_question_text"
+        android:layout_marginTop="20dp"
+        android:text="DETAILED FEEDBACK"
+        android:textColor="@color/text_secondary"
+        android:textSize="11sp"
+        android:textStyle="bold" />
+
+    <ScrollView
+        android:id="@+id/sv_explanation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_feedback_label"
+        android:layout_above="@+id/btn_close"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="16dp"
+        android:fillViewport="true">
+
+        <TextView
+            android:id="@+id/tv_explanation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Detailed explanation..."
+            android:textColor="@color/text_primary"
+            android:textSize="14sp" />
+
+    </ScrollView>
+
+    <Button
+        android:id="@+id/btn_close"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/bg_button_primary"
+        android:text="Close"
+        android:textAllCaps="false"
+        android:textColor="@color/surface_white"
+        android:textSize="14sp" />
+
+</RelativeLayout>

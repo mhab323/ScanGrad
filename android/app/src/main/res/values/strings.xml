@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ScanGrad</string>
+    <!-- Replaced automatically by google-services plugin once Google Sign-In is
+         enabled in Firebase Console → Authentication → Sign-in method → Google.
+         Re-download google-services.json after enabling it. -->
+    <string name="default_web_client_id">REPLACE_AFTER_ENABLING_GOOGLE_SIGN_IN</string>
+</resources>

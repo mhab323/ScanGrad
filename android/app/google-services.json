@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "510827391655",
+    "project_id": "scangrad-cecc0",
+    "storage_bucket": "scangrad-cecc0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:510827391655:android:0565889033834c473a8982",
+        "android_client_info": {
+          "package_name": "com.example.scangrad"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBbS5uEj2FY2Ft_p_FqaHgPzClxakfVdmQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
