@@ -14,7 +14,7 @@ An end-to-end, AI-powered grading platform for handwritten exams. ScanGrad strea
 
 
 ## 📑 Table of Contents
-- [ScanGrad 🎓](#scangrad-)
+  - [ScanGrad 🎓](#scangrad-)
   - [📸 App Screenshots](#-app-screenshots)
   - [🚀 Overview](#-overview)
   - [🛠️ Tech Stack](#️-tech-stack)
