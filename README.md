@@ -5,13 +5,13 @@ An end-to-end, AI-powered grading platform for handwritten exams. ScanGrad strea
 ## 📸 App Screenshots
 
 <div align="center">
-  <img src=""screenshots\camera_view.png"" width="250" alt="Dashboard"/>
+  <img src="screenshots/camera_view.png" width="250" alt="Dashboard"/>
   &nbsp;&nbsp;&nbsp;
-  <img src="screenshots\validation_view.png" width="250" alt="Data Validation Screen"/>
+  <img src="screenshots/validation_view.png" width="250" alt="Data Validation Screen"/>
   &nbsp;&nbsp;&nbsp;
-  <img src="screenshots\results_view.png" width="250" alt="Grading Results Screen"/>
+  <img src="screenshots/results_view.png" width="250" alt="Grading Results Screen"/>
 </div>
-*(Note: Update the image paths above to point to where you store your screenshots in the repository)*
+
 
 ## 📑 Table of Contents
 - [ScanGrad 🎓](#scangrad-)
