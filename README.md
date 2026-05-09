@@ -5,11 +5,11 @@ An end-to-end, AI-powered grading platform for handwritten exams. ScanGrad strea
 ## 📸 App Screenshots
 
 <div align="center">
-  <img src="screenshots/camera_view.png" width="250" alt="Dashboard"/>
+  <img src="screenshots/camera_view.png" width="220" alt="Dashboard"/>
   &nbsp;&nbsp;&nbsp;
-  <img src="screenshots/validation_view.png" width="250" alt="Data Validation Screen"/>
+  <img src="screenshots/validation_view.png" width="220" alt="Data Validation Screen"/>
   &nbsp;&nbsp;&nbsp;
-  <img src="screenshots/results_view.png" width="250" alt="Grading Results Screen"/>
+  <img src="screenshots/results_view.png" width="220" alt="Grading Results Screen"/>
 </div>
 
 
