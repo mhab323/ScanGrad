@@ -1,4 +1,6 @@
-from config import load_environment
+from contextlib import asynccontextmanager
+
+from config import load_environment, lifespan
 
 load_environment()
 
@@ -9,6 +11,9 @@ from ocr import extract_text_from_url
 from generator import RAGGenerator
 from langchain_chroma import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
+import socket
+import firebase_admin
+from firebase_admin import credentials, firestore
 import time
 
 print("Initializing Vector Database and RAG Generator...")
@@ -16,7 +21,7 @@ embedding_model = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 vectorstore = Chroma(persist_directory="./chroma_db", embedding_function=embedding_model)
 generator = RAGGenerator(vectorstore=vectorstore)
 
-app = FastAPI()
+app = FastAPI(lifespan=lifespan)
 
 
 @app.get("/health")

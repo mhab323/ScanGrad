@@ -9,7 +9,7 @@ from langchain_ollama import ChatOllama
 class RAGGenerator:
     def __init__(self, vectorstore):
         self.retriever = vectorstore.as_retriever(search_kwargs={"k": 10})
-        self.query_llm = ChatOllama(model="llama3")
+        self.query_llm = ChatOllama(model="llama3.2:3b")
         self.grading_llm = ChatGoogleGenerativeAI(
             model="gemini-2.5-flash",
             temperature=0,
