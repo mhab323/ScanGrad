@@ -29,8 +29,6 @@ class EvaluationViewModel : ViewModel() {
             _errorMessage.value = null
             _evaluationResult.value = null
             val result = repository.sendForGrading(request)
-            // Flip loading off first so the progress observer doesn't fire
-            // *after* the result observer re-shows progress for the persist step.
             _isLoading.value = false
             result
                 .onSuccess { response ->
@@ -42,7 +40,6 @@ class EvaluationViewModel : ViewModel() {
         }
     }
 
-    /** Reset transient state so a navigated-away screen doesn't re-trigger on back press. */
     fun clearResult() {
         _evaluationResult.value = null
         _errorMessage.value = null

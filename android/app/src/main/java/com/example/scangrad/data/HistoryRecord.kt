@@ -12,5 +12,6 @@ data class HistoryRecord(
 
 enum class HistoryStatus(val label: String) {
     HIGH_CONFIDENCE("High Confidence"),
-    VALIDATED("Validated")
+    VALIDATED("Validated"),
+    PENDING("Processing...")
 }

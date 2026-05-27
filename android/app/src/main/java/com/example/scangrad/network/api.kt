@@ -1,4 +1,4 @@
-package com.example.scangrad.network
+package com.example.scangrad.network // Make sure this matches your actual package
 
 import okhttp3.OkHttpClient
 import retrofit2.Response
@@ -16,10 +16,9 @@ interface FastApiService {
     ): Response<EvaluationResponse>
 
     object ApiClient {
-        private const val BASE_URL = "http://10.0.2.2:8000/"
+        private var retrofit: Retrofit? = null
+        var isReady: Boolean = false
 
-        // No timeout — grading can take as long as it needs.
-        // OkHttp treats 0 as "infinite" for read/write/call.
         private val httpClient: OkHttpClient = OkHttpClient.Builder()
             .connectTimeout(15, TimeUnit.SECONDS)
             .readTimeout(0, TimeUnit.MILLISECONDS)
@@ -27,14 +26,17 @@ interface FastApiService {
             .callTimeout(0, TimeUnit.MILLISECONDS)
             .build()
 
-        val fastApiService: FastApiService by lazy {
-            Retrofit.Builder()
-                .baseUrl(BASE_URL)
+        fun initialize(dynamicBaseUrl: String) {
+            retrofit = Retrofit.Builder()
+                .baseUrl(dynamicBaseUrl)
                 .client(httpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
-                .create(FastApiService::class.java)
+            isReady = true
         }
-    }
 
+        val fastApiService: FastApiService
+            get() = retrofit?.create(FastApiService::class.java)
+                ?: throw IllegalStateException("Fatal Error: You must call ApiClient.initialize(url) before making requests.")
+    }
 }

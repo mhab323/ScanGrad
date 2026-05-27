@@ -40,7 +40,13 @@ class HistoryFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        historyAdapter = HistoryAdapter(emptyList())
+        historyAdapter = HistoryAdapter(emptyList()) { submissionId ->
+            if (submissionId.isNotBlank()) {
+                (requireActivity() as HostActivity).navigateTo(
+                    SubmissionDetailsFragment.newInstance(submissionId)
+                )
+            }
+        }
         binding.rvHistoryList.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = historyAdapter
@@ -90,30 +96,23 @@ class HistoryFragment : Fragment() {
         }
     }
 
-    /**
-     * Maps a [Submission] (as stored in Firestore) to the [HistoryRecord] that
-     * the adapter displays.
-     *
-     * Score is 0 until the AI grading pipeline populates a `score` field;
-     * status maps GRADED → HIGH_CONFIDENCE, anything else → VALIDATED.
-     */
     private fun Submission.toHistoryRecord(): HistoryRecord {
         val subtitle = buildString {
             if (date.isNotEmpty()) append(date)
             if (date.isNotEmpty() && department.isNotEmpty()) append(" • ")
             if (department.isNotEmpty()) append(department)
         }
-        val badge = if (status == SubmissionStatus.GRADED.name) {
-            HistoryStatus.HIGH_CONFIDENCE
-        } else {
-            HistoryStatus.VALIDATED
+        val badge = when (status) {
+            SubmissionStatus.PENDING.name -> HistoryStatus.PENDING
+            SubmissionStatus.GRADED.name -> HistoryStatus.HIGH_CONFIDENCE
+            else -> HistoryStatus.VALIDATED
         }
         return HistoryRecord(
             id          = id,
             courseCode  = courseCode.ifEmpty { "—" },
             title       = title.ifEmpty { "Untitled" },
             dateAndType = subtitle,
-            score       = 0,
+            score       = if (score >= 0) score.toInt() else 0,
             maxScore    = 100,
             statusBadge = badge
         )

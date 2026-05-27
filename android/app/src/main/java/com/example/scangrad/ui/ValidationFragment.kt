@@ -1,12 +1,14 @@
 package com.example.scangrad.ui
 
+import android.R
+import android.annotation.SuppressLint
+import android.app.DatePickerDialog
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.pdf.PdfRenderer
 import android.net.Uri
 import android.os.Bundle
 import android.os.ParcelFileDescriptor
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,16 +16,15 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import com.example.scangrad.data.Submission
 import com.example.scangrad.data.UserSession
 import com.example.scangrad.databinding.FragmentValidationBinding
 import com.example.scangrad.db.FirebaseManager
-import com.example.scangrad.network.EvaluationRepository
 import com.example.scangrad.network.EvaluationRequest
 import com.example.scangrad.viewmodel.EvaluationViewModel
-import kotlinx.coroutines.launch
 import java.io.File
+import androidx.core.net.toUri
+import java.util.Calendar
 
 class ValidationFragment : Fragment() {
 
@@ -35,6 +36,8 @@ class ValidationFragment : Fragment() {
 
     private lateinit var evaluationViewModel: EvaluationViewModel
     private var pendingSubmissionId: String? = null
+
+    private var selectedDateString: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -79,11 +82,9 @@ class ValidationFragment : Fragment() {
             val submissionId = pendingSubmissionId ?: return@observe
             val activity = requireActivity()
 
-            // Capture data, then clear ViewModel state so back-press doesn't re-trigger.
             pendingSubmissionId = null
             evaluationViewModel.clearResult()
 
-            // Keep progress visible while we persist the grade.
             _binding?.let {
                 it.pbUpload.visibility = View.VISIBLE
                 it.tvUploadStatus.visibility = View.VISIBLE
@@ -144,84 +145,45 @@ class ValidationFragment : Fragment() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun populateDummyData() {
         binding.etCourseCode.setText("CS 301")
         binding.etDepartment.setText("Computer Science")
         binding.etTitle.setText("Final Exam")
-        binding.etDate.setText("Oct 24")
     }
 
     private fun setupListeners() {
         binding.btnCancel.setOnClickListener { onCancelClicked() }
         binding.btnRetake.setOnClickListener { onRetakeClicked() }
-//        binding.btnConfirm.setOnClickListener { onConfirmClicked() }
-        binding.btnConfirm.setOnClickListener { showDemoSelectorDialog() }
+        binding.btnConfirm.setOnClickListener { onConfirmClicked() }
+        binding.btnSelectDate.setOnClickListener {
+            openDatePicker()
+        }
     }
 
-    private fun showDemoSelectorDialog() {
-        val options = arrayOf(
-            "Demo: Good Exam (96)",
-            "Demo: Mid Exam (72)",
-            "Demo: Bad Exam (45)",
-            "Run Normal App Flow"
+    private fun openDatePicker() {
+        val calendar = Calendar.getInstance()
+        val currentYear = calendar.get(Calendar.YEAR)
+        val currentMonth = calendar.get(Calendar.MONTH) // 0-indexed
+        val currentDay = calendar.get(Calendar.DAY_OF_MONTH)
+
+        val datePickerDialog = DatePickerDialog(
+            requireContext(),
+            { _, year, month, dayOfMonth ->
+                val formattedMonth = String.format("%02d", month + 1)
+                val formattedDay = String.format("%02d", dayOfMonth)
+
+                selectedDateString = "$year-$formattedMonth-$formattedDay"
+
+                binding.btnSelectDate.text = selectedDateString
+                binding.btnSelectDate.setTextColor(requireContext().getColor(R.color.black))
+            },
+            currentYear,
+            currentMonth,
+            currentDay
         )
 
-        android.app.AlertDialog.Builder(requireContext())
-            .setTitle("Select Prototype Scenario")
-            .setItems(options) { _, which ->
-                when (which) {
-                    0 -> runMockEvaluation("good")
-                    1 -> runMockEvaluation("mid")
-                    2 -> runMockEvaluation("bad")
-                    3 -> onConfirmClicked()
-                }
-            }
-            .show()
-    }
-
-    private fun runMockEvaluation(mockId: String) {
-        binding.pbUpload.visibility = View.VISIBLE
-        binding.tvUploadStatus.visibility = View.VISIBLE
-        binding.tvUploadStatus.text = "Sending to FastAPI backend..."
-        binding.btnConfirm.isEnabled = false
-
-        requireActivity().lifecycleScope.launch {
-            val request = EvaluationRequest(
-                submissionId = mockId,
-                courseCode = "ENG-6003",
-                examQuestion = "",
-                extractedText = "",
-                imageUrl = "demo_url_bypass"
-            )
-
-            val result = EvaluationRepository().sendForGrading(request)
-
-
-            binding.pbUpload.visibility = View.GONE
-            binding.tvUploadStatus.visibility = View.GONE
-            binding.btnConfirm.isEnabled = true
-
-            result.onSuccess { response ->
-                showResultDialog(response.overallScore, response.generalFeedback, response.confidenceLevel)
-            }.onFailure { e ->
-                Toast.makeText(requireContext(), "Backend Error: ${e.message}", Toast.LENGTH_LONG).show()
-            }
-        }
-    }
-
-    private fun showResultDialog(score: Double, feedback: String, confidence: String) {
-        val emoji = when {
-            score >= 90 -> "🏆"
-            score >= 70 -> "⚠️"
-            else -> "❌"
-        }
-
-        android.app.AlertDialog.Builder(requireContext())
-            .setTitle("$emoji Final Score: ${score.toInt()}/100")
-            .setMessage("Confidence: $confidence\n\nFeedback:\n$feedback")
-            .setPositiveButton("Close") { dialog, _ -> dialog.dismiss() }
-            .setCancelable(false)
-            .show()
+        datePickerDialog.show()
     }
 
     private fun onCancelClicked() {
@@ -233,8 +195,9 @@ class ValidationFragment : Fragment() {
         requireActivity().supportFragmentManager.popBackStack()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun onConfirmClicked() {
-        val localUri = Uri.parse(imageUriString)
+        val localUri = imageUriString.toUri()
         binding.btnConfirm.isEnabled = false
         binding.btnCancel.isEnabled = false
         binding.btnRetake.isEnabled = false
@@ -262,7 +225,6 @@ class ValidationFragment : Fragment() {
                             extractedText = "",
                             imageUrl = downloadUrl
                         )
-                        // Hand off to the ViewModel — observers drive the UI from here.
                         evaluationViewModel.evaluate(request)
                     },
                     onFailed = { error ->
@@ -293,7 +255,7 @@ class ValidationFragment : Fragment() {
             courseCode = binding.etCourseCode.text.toString().trim(),
             department = binding.etDepartment.text.toString().trim(),
             title = binding.etTitle.text.toString().trim(),
-            date = binding.etDate.text.toString().trim(),
+            date = selectedDateString,
             imageUri = imageUri,
             status = "PENDING"
         )

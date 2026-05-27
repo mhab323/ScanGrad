@@ -11,7 +11,8 @@ import com.example.scangrad.data.HistoryRecord
 import com.example.scangrad.data.HistoryStatus
 
 class HistoryAdapter(
-    private var records: List<HistoryRecord> = emptyList()
+    private var records: List<HistoryRecord> = emptyList(),
+    private val onItemClick: (String) -> Unit
 ) : RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() {
 
     inner class HistoryViewHolder(private val binding: ItemHistoryCardBinding) :
@@ -25,6 +26,10 @@ class HistoryAdapter(
             binding.tvScoreMax.text = "/${record.maxScore}"
             binding.tvHistoryBadge.text = record.statusBadge.label
 
+            binding.root.setOnClickListener {
+                onItemClick(record.id)
+            }
+
             val badgeBackground = GradientDrawable()
             badgeBackground.cornerRadius = 16f
 
@@ -36,6 +41,10 @@ class HistoryAdapter(
                 HistoryStatus.VALIDATED -> {
                     badgeBackground.setColor(Color.parseColor("#E0E0E0"))
                     binding.tvHistoryBadge.setTextColor(Color.parseColor("#757575"))
+                }
+                HistoryStatus.PENDING -> {
+                    badgeBackground.setColor(Color.parseColor("#FFF59D"))
+                    binding.tvHistoryBadge.setTextColor(Color.parseColor("#F57F17"))
                 }
             }
             binding.tvHistoryBadge.background = badgeBackground
