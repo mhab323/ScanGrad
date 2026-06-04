@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- White nav surface with a 1px hairline along the top edge. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:gravity="top">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/hairline" />
+        </shape>
+    </item>
+    <item android:top="1dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/surface" />
+        </shape>
+    </item>
+</layer-list>

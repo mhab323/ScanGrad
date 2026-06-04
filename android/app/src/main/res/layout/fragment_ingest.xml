@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_gray">
+
+    <LinearLayout
+        android:id="@+id/layout_actions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/surface_white"
+        android:elevation="4dp"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tvIngestStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:text="Working..."
+            android:textColor="@color/text_secondary"
+            android:textSize="13sp"
+            android:visibility="gone" />
+
+        <ProgressBar
+            android:id="@+id/pbIngest"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_marginBottom="12dp"
+            android:indeterminate="true"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btnSubmitIngest"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:background="@drawable/bg_button_primary"
+            android:text="Upload to Knowledge Base"
+            android:textAllCaps="false"
+            android:textColor="@color/surface_white"
+            android:textSize="15sp" />
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/layout_actions"
+        android:scrollbars="none">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="24dp">
+
+            <TextView
+                android:id="@+id/tv_form_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Upload Exam Key"
+                android:textColor="@color/text_primary"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_form_subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_form_title"
+                android:layout_marginTop="4dp"
+                android:text="Index an exam's questions and/or official answer key into the knowledge base. Nothing is graded here."
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/lbl_course_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_form_subtitle"
+                android:layout_marginTop="24dp"
+                android:text="COURSE CODE"
+                android:textColor="@color/text_secondary"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/etCourseCode"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_below="@id/lbl_course_code"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/bg_rounded_input"
+                android:hint="e.g. 6003"
+                android:inputType="text"
+                android:paddingHorizontal="16dp"
+                android:textColor="@color/text_primary"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/lbl_year"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/etCourseCode"
+                android:layout_marginTop="16dp"
+                android:text="YEAR"
+                android:textColor="@color/text_secondary"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/etYear"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_below="@id/lbl_year"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/bg_rounded_input"
+                android:hint="e.g. 2019"
+                android:inputType="number"
+                android:maxLength="4"
+                android:paddingHorizontal="16dp"
+                android:textColor="@color/text_primary"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/lbl_semester"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/etYear"
+                android:layout_marginTop="16dp"
+                android:text="SEMESTER"
+                android:textColor="@color/text_secondary"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/spSemester"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_below="@id/lbl_semester"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/bg_rounded_input"
+                android:entries="@array/ingest_semester_values"
+                android:paddingHorizontal="12dp" />
+
+            <TextView
+                android:id="@+id/lbl_moed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/spSemester"
+                android:layout_marginTop="16dp"
+                android:text="MOED"
+                android:textColor="@color/text_secondary"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/spMoed"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_below="@id/lbl_moed"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/bg_rounded_input"
+                android:entries="@array/ingest_moed_values"
+                android:paddingHorizontal="12dp" />
+
+            <TextView
+                android:id="@+id/lbl_version"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/spMoed"
+                android:layout_marginTop="16dp"
+                android:text="VERSION"
+                android:textColor="@color/text_secondary"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/etVersion"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_below="@id/lbl_version"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/bg_rounded_input"
+                android:hint="v1"
+                android:text="v1"
+                android:inputType="text"
+                android:paddingHorizontal="16dp"
+                android:textColor="@color/text_primary"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/lbl_documents"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/etVersion"
+                android:layout_marginTop="24dp"
+                android:text="DOCUMENTS (PICK AT LEAST ONE)"
+                android:textColor="@color/text_secondary"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnPickQuestions"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_below="@id/lbl_documents"
+                android:layout_marginTop="6dp"
+                android:text="Pick Questions PDF"
+                android:textAllCaps="false" />
+
+            <TextView
+                android:id="@+id/tvQuestionsFile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/btnPickQuestions"
+                android:layout_marginTop="4dp"
+                android:text="No questions file selected"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btnPickAnswerKey"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_below="@id/tvQuestionsFile"
+                android:layout_marginTop="12dp"
+                android:text="Pick Answer Key PDF"
+                android:textAllCaps="false" />
+
+            <TextView
+                android:id="@+id/tvAnswerKeyFile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/btnPickAnswerKey"
+                android:layout_marginTop="4dp"
+                android:text="No answer-key file selected"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp" />
+
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>
