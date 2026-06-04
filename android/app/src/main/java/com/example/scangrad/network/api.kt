@@ -15,6 +15,11 @@ interface FastApiService {
         @Body request: EvaluationRequest
     ): Response<EvaluationResponse>
 
+    @POST("api/ingest")
+    suspend fun ingestExam(
+        @Body request: IngestRequest
+    ): Response<IngestResponse>
+
     object ApiClient {
         private var retrofit: Retrofit? = null
         var isReady: Boolean = false

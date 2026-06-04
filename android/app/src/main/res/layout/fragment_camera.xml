@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/black">
@@ -9,37 +10,191 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!-- Bottom control bar -->
+    <!-- Top bar -->
     <RelativeLayout
-        android:id="@+id/layout_controls"
+        android:id="@+id/layout_topbar"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:layout_alignParentBottom="true"
-        android:background="#CC000000">
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="12dp">
 
-        <TextView
+        <ImageView
             android:id="@+id/btn_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_marginStart="32dp"
-            android:padding="8dp"
-            android:text="Cancel"
-            android:textColor="@color/surface_white"
-            android:textSize="16sp" />
+            android:background="@drawable/bg_circle_scrim"
+            android:padding="9dp"
+            android:src="@drawable/ic_close" />
 
-        <ImageButton
-            android:id="@+id/btn_capture"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
+        <TextView
+            android:id="@+id/tv_scan_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:background="@drawable/bg_capture_button"
-            android:contentDescription="Capture photo"
-            android:padding="16dp"
-            android:src="@drawable/camera"
-            android:tint="@color/primary_blue" />
+            android:fontFamily="@font/plus_jakarta"
+            android:text="Scan Document"
+            android:textColor="#FFFFFF"
+            android:textSize="17sp"
+            android:textStyle="bold" />
 
+        <ImageView
+            android:id="@+id/btn_flash"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/bg_circle_scrim"
+            android:padding="9dp"
+            android:src="@drawable/ic_flash" />
     </RelativeLayout>
+
+    <!-- Framing region -->
+    <RelativeLayout
+        android:id="@+id/frame_region"
+        android:layout_width="match_parent"
+        android:layout_height="380dp"
+        android:layout_centerInParent="true"
+        android:layout_marginHorizontal="36dp">
+
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/ic_corner" />
+
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:rotation="90"
+            android:src="@drawable/ic_corner" />
+
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:rotation="270"
+            android:src="@drawable/ic_corner" />
+
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:rotation="180"
+            android:src="@drawable/ic_corner" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/bg_scan_hint"
+            android:fontFamily="@font/inter"
+            android:letterSpacing="0.06"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:text="POSITION PAPER IN FRAME"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <!-- Bottom controls -->
+    <LinearLayout
+        android:id="@+id/layout_controls"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#CC000000"
+        android:orientation="vertical"
+        android:paddingTop="20dp"
+        android:paddingBottom="28dp">
+
+        <!-- Scan / Upload toggle -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/bg_scan_toggle"
+            android:orientation="horizontal"
+            android:padding="4dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_scan_toggle_selected"
+                android:fontFamily="@font/inter"
+                android:paddingHorizontal="22dp"
+                android:paddingVertical="8dp"
+                android:text="SCAN"
+                android:textColor="@color/on_surface"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/btn_upload_pdf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter"
+                android:paddingHorizontal="22dp"
+                android:paddingVertical="8dp"
+                android:text="UPLOAD PDF"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Capture row -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:paddingHorizontal="40dp">
+
+            <ImageButton
+                android:id="@+id/btn_capture"
+                android:layout_width="76dp"
+                android:layout_height="76dp"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/bg_capture_button"
+                android:contentDescription="Capture photo"
+                android:scaleType="centerInside" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_sparkle"
+                    app:tint="#FFFFFF" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:fontFamily="@font/inter"
+                    android:letterSpacing="0.06"
+                    android:text="AUTO"
+                    android:textColor="#FFFFFF"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
 
 </RelativeLayout>

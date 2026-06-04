@@ -1,9 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary_blue">#3F51B5</color>
-    <color name="background_gray">#F8F9FA</color>
+    <!-- ===== Academic Precision palette (from Stitch "Scangrad") ===== -->
+
+    <!-- Brand / primary (Academic Indigo) -->
+    <color name="primary">#4F46E5</color>
+    <color name="primary_dark">#3525CD</color>
+    <color name="primary_deep">#1E1B4B</color>
+    <color name="on_primary">#FFFFFF</color>
+    <color name="primary_container">#E2DFFF</color>
+    <color name="on_primary_container">#1E1B91</color>
+    <!-- 8% indigo tint used for soft icon/badge backgrounds -->
+    <color name="primary_soft">#EEEDFD</color>
+
+    <!-- Legacy aliases kept so existing layouts pick up the new palette -->
+    <color name="primary_blue">#4F46E5</color>
+    <color name="background_gray">#F7F8FC</color>
     <color name="surface_white">#FFFFFF</color>
-    <color name="text_primary">#212121</color>
-    <color name="text_secondary">#757575</color>
-    <color name="input_background">#EEEEEE</color>
+    <color name="text_primary">#1E1B2E</color>
+    <color name="text_secondary">#6B6880</color>
+    <color name="input_background">#F2F3F7</color>
+
+    <!-- Surfaces & structure -->
+    <color name="canvas">#F7F8FC</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="surface_container">#F2F3F7</color>
+    <color name="on_surface">#1E1B2E</color>
+    <color name="on_surface_variant">#6B6880</color>
+    <color name="hairline">#ECECF1</color>
+    <color name="outline">#C7C4D8</color>
+
+    <!-- Semantic grading scale -->
+    <color name="grade_high">#16A34A</color>
+    <color name="grade_high_bg">#E6F5EC</color>
+    <color name="grade_mid">#D97706</color>
+    <color name="grade_mid_bg">#FBF0E0</color>
+    <color name="grade_low">#DC2626</color>
+    <color name="grade_low_bg">#FBE9E9</color>
+
+    <!-- Status / feedback -->
+    <color name="success">#16A34A</color>
+    <color name="warning">#D97706</color>
+    <color name="danger">#DC2626</color>
+
+    <!-- Scrims -->
+    <color name="scrim_60">#99000000</color>
+    <color name="scrim_80">#CC000000</color>
 </resources>

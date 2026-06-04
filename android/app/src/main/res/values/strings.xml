@@ -4,4 +4,16 @@
          enabled in Firebase Console → Authentication → Sign-in method → Google.
          Re-download google-services.json after enabling it. -->
     <string name="default_web_client_id">REPLACE_AFTER_ENABLING_GOOGLE_SIGN_IN</string>
+
+    <!-- Ingest (Knowledge Base) metadata dropdowns. Values are vector-DB metadata
+         filters and MUST stay exactly as below — free text breaks retrieval. -->
+    <string-array name="ingest_semester_values">
+        <item>sem1</item>
+        <item>sem2</item>
+        <item>sem3</item>
+    </string-array>
+    <string-array name="ingest_moed_values">
+        <item>moed1</item>
+        <item>moed2</item>
+    </string-array>
 </resources>

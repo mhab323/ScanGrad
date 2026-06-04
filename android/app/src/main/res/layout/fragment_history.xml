@@ -4,123 +4,247 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_gray">
+    android:background="@color/canvas">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:paddingBottom="88dp"
+        android:paddingBottom="96dp"
         android:scrollbars="none">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="30dp">
+            android:orientation="vertical"
+            android:paddingHorizontal="20dp"
+            android:paddingTop="20dp">
 
-            <ImageView
-                android:id="@+id/iv_app_logo"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_alignParentStart="true"
-                android:src="@drawable/book"
-                 />
-
-            <TextView
-                android:id="@+id/tv_app_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/iv_app_logo"
-                android:layout_marginStart="8dp"
-                android:text="ScanGrad"
-                android:textColor="@color/primary_blue"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tv_history_header"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/iv_app_logo"
-                android:layout_marginTop="32dp"
-                android:text="Submission History"
-                android:textColor="@color/primary_blue"
-                android:textSize="28sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tv_history_desc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tv_history_header"
-                android:layout_marginTop="4dp"
-                android:text="Archive of your academic journey and evaluated transcripts."
-                android:textColor="@color/text_secondary"
-                android:textSize="14sp" />
-
+            <!-- Header -->
             <RelativeLayout
-                android:id="@+id/layout_search"
+                android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_below="@id/tv_history_desc"
-                android:layout_marginTop="24dp"
-                android:background="@drawable/bg_rounded_input"
-                android:paddingHorizontal="12dp">
+                android:layout_height="wrap_content">
 
-                <ImageView
-                    android:id="@+id/iv_search_icon"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                <TextView
+                    android:id="@+id/tv_history_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
-                    android:src="@android:drawable/ic_menu_search"
-                    app:tint="@color/text_secondary" />
+                    android:textAppearance="@style/TextAppearance.SG.Headline"
+                    android:text="History"
+                    android:textColor="@color/primary" />
+
+                <ImageView
+                    android:id="@+id/btn_filters"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/bg_avatar"
+                    android:padding="9dp"
+                    android:src="@drawable/ic_tune"
+                    app:tint="@color/primary" />
+            </RelativeLayout>
+
+            <!-- Search -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_input"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="14dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_search"
+                    app:tint="@color/on_surface_variant" />
 
                 <EditText
                     android:id="@+id/et_search"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_toEndOf="@id/iv_search_icon"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="10dp"
                     android:background="@null"
-                    android:hint="Search exams, courses, or dates..."
-                    android:textColorHint="@color/text_secondary"
+                    android:hint="Search exams, courses, or dates…"
+                    android:textColor="@color/on_surface"
+                    android:textColorHint="@color/on_surface_variant"
                     android:textSize="14sp" />
-            </RelativeLayout>
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/btn_filters"
+            <!-- Calendar card -->
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_below="@id/layout_search"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/bg_rounded_input"
-                android:gravity="center"
-                android:text="Filters"
-                android:textColor="@color/primary_blue"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_card"
+                android:orientation="vertical"
+                android:padding="18dp">
 
-            <!-- Loading spinner — shown while Firestore fetch is in flight -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:fontFamily="@font/plus_jakarta"
+                        android:text="October 2023"
+                        android:textColor="@color/on_surface"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_chevron_left"
+                            app:tint="@color/on_surface_variant" />
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginStart="12dp"
+                            android:rotationY="180"
+                            android:src="@drawable/ic_chevron_left"
+                            app:tint="@color/on_surface_variant" />
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <!-- Weekday header -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:orientation="horizontal">
+
+                    <TextView style="@style/SG.CalCell" android:text="M" android:textColor="@color/on_surface_variant" />
+                    <TextView style="@style/SG.CalCell" android:text="T" android:textColor="@color/on_surface_variant" />
+                    <TextView style="@style/SG.CalCell" android:text="W" android:textColor="@color/on_surface_variant" />
+                    <TextView style="@style/SG.CalCell" android:text="T" android:textColor="@color/on_surface_variant" />
+                    <TextView style="@style/SG.CalCell" android:text="F" android:textColor="@color/on_surface_variant" />
+                    <TextView style="@style/SG.CalCell" android:text="S" android:textColor="@color/on_surface_variant" />
+                    <TextView style="@style/SG.CalCell" android:text="S" android:textColor="@color/on_surface_variant" />
+                </LinearLayout>
+
+                <!-- Week 1 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:orientation="horizontal">
+
+                    <TextView style="@style/SG.CalCell" android:text="25" android:textColor="@color/outline" />
+                    <TextView style="@style/SG.CalCell" android:text="26" android:textColor="@color/outline" />
+                    <TextView style="@style/SG.CalCell" android:text="27" android:textColor="@color/outline" />
+                    <TextView style="@style/SG.CalCell" android:text="28" android:textColor="@color/outline" />
+                    <TextView style="@style/SG.CalCell" android:text="29" android:textColor="@color/outline" />
+                    <TextView style="@style/SG.CalCell" android:text="30" android:textColor="@color/outline" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="34dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_day_selected"
+                        android:gravity="center"
+                        android:text="1"
+                        android:textColor="@color/primary"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <!-- Week 2 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView style="@style/SG.CalCell" android:text="2" />
+                    <LinearLayout style="@style/SG.CalDayDot">
+                        <TextView style="@style/SG.CalCellInner" android:text="3" />
+                        <View style="@style/SG.CalDot" />
+                    </LinearLayout>
+                    <TextView style="@style/SG.CalCell" android:text="4" />
+                    <LinearLayout style="@style/SG.CalDayDot">
+                        <TextView style="@style/SG.CalCellInner" android:text="5" />
+                        <View style="@style/SG.CalDot" />
+                    </LinearLayout>
+                    <TextView style="@style/SG.CalCell" android:text="6" />
+                    <TextView style="@style/SG.CalCell" android:text="7" />
+                    <TextView style="@style/SG.CalCell" android:text="8" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Filter pills -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/SG.FilterPill"
+                        android:background="@drawable/pill_filter_selected"
+                        android:text="All"
+                        android:textColor="@color/on_primary" />
+
+                    <TextView
+                        style="@style/SG.FilterPill"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/pill_filter"
+                        android:text="This Week"
+                        android:textColor="@color/on_surface_variant" />
+
+                    <TextView
+                        style="@style/SG.FilterPill"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/pill_filter"
+                        android:text="Subject"
+                        android:textColor="@color/on_surface_variant" />
+
+                    <TextView
+                        style="@style/SG.FilterPill"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/pill_filter"
+                        android:text="Grade"
+                        android:textColor="@color/on_surface_variant" />
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <!-- Loading -->
             <ProgressBar
                 android:id="@+id/progress_bar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/btn_filters"
-                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="48dp"
+                android:indeterminateTint="@color/primary"
                 android:visibility="gone" />
 
-            <!-- Empty-state label — shown when the user has no submissions -->
+            <!-- Empty -->
             <TextView
                 android:id="@+id/tv_empty_state"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/btn_filters"
-                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="48dp"
                 android:text="No submissions yet."
-                android:textColor="@color/text_secondary"
+                android:textColor="@color/on_surface_variant"
                 android:textSize="14sp"
                 android:visibility="gone" />
 
@@ -128,8 +252,7 @@
                 android:id="@+id/rv_history_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/btn_filters"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
                 android:nestedScrollingEnabled="false"
                 tools:listitem="@layout/item_history_card" />
 
@@ -137,11 +260,11 @@
                 android:id="@+id/tv_load_more"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/rv_history_list"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="24dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:padding="8dp"
                 android:text="Load more history"
-                android:textColor="@color/primary_blue"
+                android:textColor="@color/primary"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
@@ -149,13 +272,12 @@
                 android:id="@+id/tv_display_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tv_load_more"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="4dp"
-                android:text="Displaying 4 of 28 submissions"
-                android:textColor="@color/text_secondary"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="2dp"
+                android:text="Displaying 0 submissions"
+                android:textColor="@color/on_surface_variant"
                 android:textSize="12sp" />
 
-        </RelativeLayout>
+        </LinearLayout>
     </ScrollView>
 </RelativeLayout>

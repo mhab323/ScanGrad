@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import com.example.scangrad.R
 import com.example.scangrad.databinding.DialogQuestionDetailBinding
 import com.example.scangrad.network.QuestionEvaluation
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -27,6 +29,7 @@ class QuestionDetailDialogFragment : BottomSheetDialogFragment() {
         val args = requireArguments()
         val title = args.getString(ARG_TITLE).orEmpty()
         val questionText = args.getString(ARG_TEXT).orEmpty()
+        val studentAnswer = args.getString(ARG_STUDENT_ANSWER).orEmpty()
         val explanation = args.getString(ARG_EXPLANATION).orEmpty()
         val score = args.getDouble(ARG_SCORE)
         val maxScore = args.getDouble(ARG_MAX_SCORE)
@@ -35,6 +38,22 @@ class QuestionDetailDialogFragment : BottomSheetDialogFragment() {
         binding.tvQuestionText.text = questionText.ifBlank { "(no question text)" }
         binding.tvExplanation.text = explanation.ifBlank { "(no feedback)" }
         binding.tvScoreBadge.text = formatScore(score, maxScore)
+
+        // Student's answer — hide the block when there isn't one.
+        val hasStudent = studentAnswer.isNotBlank()
+        binding.lblStudentAnswer.visibility = if (hasStudent) View.VISIBLE else View.GONE
+        binding.tvStudentAnswer.visibility = if (hasStudent) View.VISIBLE else View.GONE
+        binding.tvStudentAnswer.text = studentAnswer
+
+        // Color the score badge on the semantic grading scale.
+        val ratio = if (maxScore > 0) score / maxScore else 1.0
+        val (colorRes, pillBg) = when {
+            ratio >= 0.85 -> R.color.grade_high to R.drawable.pill_grade_high
+            ratio >= 0.5 -> R.color.grade_mid to R.drawable.pill_grade_mid
+            else -> R.color.grade_low to R.drawable.pill_grade_low
+        }
+        binding.tvScoreBadge.setTextColor(ContextCompat.getColor(requireContext(), colorRes))
+        binding.tvScoreBadge.setBackgroundResource(pillBg)
 
         binding.btnClose.setOnClickListener { dismiss() }
     }
@@ -53,6 +72,7 @@ class QuestionDetailDialogFragment : BottomSheetDialogFragment() {
     companion object {
         private const val ARG_TITLE = "title"
         private const val ARG_TEXT = "text"
+        private const val ARG_STUDENT_ANSWER = "student_answer"
         private const val ARG_EXPLANATION = "explanation"
         private const val ARG_SCORE = "score"
         private const val ARG_MAX_SCORE = "max_score"
@@ -63,6 +83,7 @@ class QuestionDetailDialogFragment : BottomSheetDialogFragment() {
             fragment.arguments = Bundle().apply {
                 putString(ARG_TITLE, item.questionId.ifBlank { fallbackTitle })
                 putString(ARG_TEXT, item.questionText)
+                putString(ARG_STUDENT_ANSWER, item.studentAnswer)
                 putString(ARG_EXPLANATION, item.explanation)
                 putDouble(ARG_SCORE, item.score)
                 putDouble(ARG_MAX_SCORE, item.maxScore)

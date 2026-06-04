@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_gray"
+    android:background="@drawable/bg_splash_gradient"
     android:fillViewport="true"
     tools:context=".ui.SignupActivity">
 
@@ -16,12 +16,13 @@
         <!-- Logo -->
         <ImageView
             android:id="@+id/iv_logo"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:scaleType="fitCenter"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="32dp"
-            android:src="@drawable/book" />
+            android:src="@drawable/logo_trasparent" />
 
         <TextView
             android:id="@+id/tv_title"
@@ -31,7 +32,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
             android:text="Create Account"
-            android:textColor="@color/primary_blue"
+            android:textColor="@color/surface_white"
             android:textSize="28sp"
             android:textStyle="bold" />
 
@@ -43,7 +44,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="4dp"
             android:text="Fill in your details to get started"
-            android:textColor="@color/text_secondary"
+            android:textColor="@color/surface_white"
             android:textSize="14sp" />
 
         <!-- Signup card -->

@@ -1,10 +1,13 @@
 package com.example.scangrad.utils
 
 import android.annotation.SuppressLint
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
+import coil.transform.CircleCropTransformation
+import com.example.scangrad.R
 import com.example.scangrad.data.Submission
 import com.example.scangrad.data.SubmissionStatus
 import com.example.scangrad.databinding.ItemRecentSubmissionBinding
@@ -23,23 +26,58 @@ class RecentSubmissionsAdapter(
             val subtitleText = "${submission.department} • ${submission.date}"
             binding.tvSubmissionSubtitle.text = subtitleText
 
+            bindAvatar(submission)
+
             when (SubmissionStatus.valueOf(submission.status)) {
                 SubmissionStatus.GRADED -> {
                     binding.pbGrading.visibility = android.view.View.GONE
                     binding.tvStatusBadge.visibility = android.view.View.VISIBLE
-                    val scoreText = if (submission.score >= 0) "GRADED ${submission.score.toInt()}" else "GRADED"
-                    binding.tvStatusBadge.text = scoreText
-                    binding.tvStatusBadge.setTextColor(Color.parseColor("#3F51B5"))
-                    binding.tvStatusBadge.setBackgroundColor(Color.parseColor("#E8EAF6"))
+                    binding.ivChevron.visibility = android.view.View.VISIBLE
+                    val ctx = binding.root.context
+                    // Map score to the semantic grading scale (high / mid / low).
+                    val pillBg: Int
+                    val pillText: Int
+                    when {
+                        submission.score < 0 -> { pillBg = R.drawable.pill_primary_soft; pillText = R.color.primary }
+                        submission.score >= 85 -> { pillBg = R.drawable.pill_grade_high; pillText = R.color.grade_high }
+                        submission.score >= 60 -> { pillBg = R.drawable.pill_grade_mid; pillText = R.color.grade_mid }
+                        else -> { pillBg = R.drawable.pill_grade_low; pillText = R.color.grade_low }
+                    }
+                    binding.tvStatusBadge.text =
+                        if (submission.score >= 0) submission.score.toInt().toString() else "GRADED"
+                    binding.tvStatusBadge.setBackgroundResource(pillBg)
+                    binding.tvStatusBadge.setTextColor(ContextCompat.getColor(ctx, pillText))
                     binding.root.isClickable = true
                     binding.root.setOnClickListener { onItemClick(submission) }
                 }
                 SubmissionStatus.PENDING -> {
                     binding.pbGrading.visibility = android.view.View.VISIBLE
                     binding.tvStatusBadge.visibility = android.view.View.GONE
-                    binding.root.isClickable = false
-                    binding.root.setOnClickListener(null)
+                    binding.ivChevron.visibility = android.view.View.VISIBLE
+                    // Still openable while grading runs — the details screen shows
+                    // the in-progress animation instead of a grade.
+                    binding.root.isClickable = true
+                    binding.root.setOnClickListener { onItemClick(submission) }
                 }
+            }
+        }
+
+        /**
+         * Loads a person photo for the submission from the pravatar pool. The photo
+         * index is derived from the submission id so the same submission always shows
+         * the same face (stable across scrolls and reloads) while different
+         * submissions get different faces from the pool of [AVATAR_POOL_SIZE].
+         */
+        private fun bindAvatar(submission: Submission) {
+            val key = submission.id.ifBlank { submission.studentName.ifBlank { submission.title } }
+            val photoIndex = Math.floorMod(key.hashCode(), AVATAR_POOL_SIZE) + 1
+            val url = "https://i.pravatar.cc/150?img=$photoIndex"
+
+            binding.ivSubmissionAvatar.load(url) {
+                crossfade(true)
+                placeholder(R.drawable.ic_doc)
+                error(R.drawable.ic_doc)
+                transformations(CircleCropTransformation())
             }
         }
     }
@@ -63,5 +101,10 @@ class RecentSubmissionsAdapter(
     fun updateData(newSubmissions: List<Submission>) {
         this.submissions = newSubmissions
         notifyDataSetChanged()
+    }
+
+    private companion object {
+        // Number of distinct pravatar photos to rotate through.
+        const val AVATAR_POOL_SIZE = 10
     }
 }

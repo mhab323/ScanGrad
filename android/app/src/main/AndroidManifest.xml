@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-feature android:name="android.hardware.camera.any" android:required="true" />
 
     <application
@@ -17,16 +18,22 @@
         android:theme="@style/Theme.ScanGrad"
         android:usesCleartextTraffic="true">
 
-        <!-- Entry point: checks auth state, redirects to HostActivity if logged in -->
+        <!-- Launcher: splash screen, then hands off to LoginActivity -->
         <activity
-            android:name=".ui.LoginActivity"
+            android:name=".ui.SplashActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustResize">
+            android:theme="@style/Theme.ScanGrad">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Checks auth state, redirects to HostActivity if logged in -->
+        <activity
+            android:name=".ui.LoginActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".ui.SignupActivity"

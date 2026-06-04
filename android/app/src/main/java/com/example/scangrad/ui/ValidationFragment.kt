@@ -15,13 +15,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.ViewModelProvider
 import com.example.scangrad.data.Submission
 import com.example.scangrad.data.UserSession
 import com.example.scangrad.databinding.FragmentValidationBinding
 import com.example.scangrad.db.FirebaseManager
 import com.example.scangrad.network.EvaluationRequest
-import com.example.scangrad.viewmodel.EvaluationViewModel
+import com.example.scangrad.network.EvaluationService
 import java.io.File
 import androidx.core.net.toUri
 import java.util.Calendar
@@ -33,9 +32,6 @@ class ValidationFragment : Fragment() {
 
     private lateinit var imageUriString: String
     private lateinit var source: String
-
-    private lateinit var evaluationViewModel: EvaluationViewModel
-    private var pendingSubmissionId: String? = null
 
     private var selectedDateString: String = ""
 
@@ -58,65 +54,6 @@ class ValidationFragment : Fragment() {
         binding.ivCapturedPhoto.post { loadPdfPreview() }
         populateDummyData()
         setupListeners()
-        setupViewModel()
-    }
-
-    private fun setupViewModel() {
-        evaluationViewModel = ViewModelProvider(this).get(EvaluationViewModel::class.java)
-
-        evaluationViewModel.isLoading.observe(viewLifecycleOwner) { loading ->
-            if (loading) {
-                binding.pbUpload.visibility = View.VISIBLE
-                binding.tvUploadStatus.visibility = View.VISIBLE
-                binding.btnConfirm.isEnabled = false
-                binding.btnCancel.isEnabled = false
-                binding.btnRetake.isEnabled = false
-            } else {
-                binding.pbUpload.visibility = View.GONE
-                binding.tvUploadStatus.visibility = View.GONE
-            }
-        }
-
-        evaluationViewModel.evaluationResult.observe(viewLifecycleOwner) { response ->
-            response ?: return@observe
-            val submissionId = pendingSubmissionId ?: return@observe
-            val activity = requireActivity()
-
-            pendingSubmissionId = null
-            evaluationViewModel.clearResult()
-
-            _binding?.let {
-                it.pbUpload.visibility = View.VISIBLE
-                it.tvUploadStatus.visibility = View.VISIBLE
-                it.tvUploadStatus.text = "Saving grade..."
-            }
-
-            FirebaseManager(activity).updateSubmissionGraded(
-                submissionId = submissionId,
-                score = response.overallScore,
-                feedback = response.generalFeedback,
-                confidenceLevel = response.confidenceLevel,
-                evaluations = response.evaluations,
-                onSuccess = {
-                    activity.supportFragmentManager
-                        .popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                    (activity as HostActivity)
-                        .navigateTo(SubmissionDetailsFragment.newInstance(submissionId))
-                },
-                onFailed = { msg ->
-                    Toast.makeText(activity, "Save failed: $msg", Toast.LENGTH_SHORT).show()
-                    _binding?.let { resetButtons() }
-                }
-            )
-        }
-
-        evaluationViewModel.errorMessage.observe(viewLifecycleOwner) { msg ->
-            msg ?: return@observe
-            Toast.makeText(requireContext(), "Grading failed: $msg", Toast.LENGTH_LONG).show()
-            pendingSubmissionId = null
-            evaluationViewModel.clearResult()
-            resetButtons()
-        }
     }
 
     private fun loadPdfPreview() {
@@ -205,6 +142,11 @@ class ValidationFragment : Fragment() {
         binding.tvUploadStatus.visibility = View.VISIBLE
         binding.tvUploadStatus.text = "Uploading document..."
 
+        // Read the form NOW — the view may be destroyed (e.g. the user taps Home)
+        // before these async callbacks fire, after which `binding` is null and any
+        // access to it crashes. Capture an app context for toasts for the same reason.
+        val baseSubmission = buildSubmission(imageUri = "")
+        val appContext = requireContext().applicationContext
         val firebaseManager = FirebaseManager(requireActivity())
 
         firebaseManager.uploadFileToStorage(
@@ -212,12 +154,11 @@ class ValidationFragment : Fragment() {
             userId = UserSession.uid,
             onSuccess = { downloadUrl ->
                 _binding?.tvUploadStatus?.text = "Saving submission..."
-                val submission = buildSubmission(imageUri = downloadUrl)
+                val submission = baseSubmission.copy(imageUri = downloadUrl)
 
                 firebaseManager.saveSubmission(
                     submission = submission,
                     onSuccess = { submissionId ->
-                        pendingSubmissionId = submissionId
                         val request = EvaluationRequest(
                             submissionId = submissionId,
                             courseCode = submission.courseCode,
@@ -225,17 +166,26 @@ class ValidationFragment : Fragment() {
                             extractedText = "",
                             imageUrl = downloadUrl
                         )
-                        evaluationViewModel.evaluate(request)
+                        // Grade in the background so the screen doesn't block.
+                        EvaluationService.submitForGrading(request)
+
+                        Toast.makeText(appContext, "Submission sent for grading", Toast.LENGTH_SHORT).show()
+                        // Only navigate if we're still on this screen; if the user
+                        // already left, leave them wherever they are.
+                        if (_binding != null) {
+                            activity?.supportFragmentManager
+                                ?.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                        }
                     },
                     onFailed = { error ->
-                        resetButtons()
-                        Toast.makeText(requireContext(), "Save failed: $error", Toast.LENGTH_SHORT).show()
+                        if (_binding != null) resetButtons()
+                        Toast.makeText(appContext, "Save failed: $error", Toast.LENGTH_SHORT).show()
                     }
                 )
             },
             onFailed = { error ->
-                resetButtons()
-                Toast.makeText(requireContext(), "Upload failed: $error", Toast.LENGTH_SHORT).show()
+                if (_binding != null) resetButtons()
+                Toast.makeText(appContext, "Upload failed: $error", Toast.LENGTH_SHORT).show()
             }
         )
     }

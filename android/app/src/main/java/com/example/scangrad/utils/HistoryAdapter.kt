@@ -31,20 +31,20 @@ class HistoryAdapter(
             }
 
             val badgeBackground = GradientDrawable()
-            badgeBackground.cornerRadius = 16f
+            badgeBackground.cornerRadius = 999f
 
             when (record.statusBadge) {
                 HistoryStatus.HIGH_CONFIDENCE -> {
-                    badgeBackground.setColor(Color.parseColor("#B05C0B"))
+                    badgeBackground.setColor(Color.parseColor("#16A34A"))
                     binding.tvHistoryBadge.setTextColor(Color.WHITE)
                 }
                 HistoryStatus.VALIDATED -> {
-                    badgeBackground.setColor(Color.parseColor("#E0E0E0"))
-                    binding.tvHistoryBadge.setTextColor(Color.parseColor("#757575"))
+                    badgeBackground.setColor(Color.parseColor("#6B6880"))
+                    binding.tvHistoryBadge.setTextColor(Color.WHITE)
                 }
                 HistoryStatus.PENDING -> {
-                    badgeBackground.setColor(Color.parseColor("#FFF59D"))
-                    binding.tvHistoryBadge.setTextColor(Color.parseColor("#F57F17"))
+                    badgeBackground.setColor(Color.parseColor("#D97706"))
+                    binding.tvHistoryBadge.setTextColor(Color.WHITE)
                 }
             }
             binding.tvHistoryBadge.background = badgeBackground

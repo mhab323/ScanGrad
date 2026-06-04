@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.scangrad.data.Submission
 import com.example.scangrad.db.FirebaseManager
+import com.google.firebase.firestore.ListenerRegistration
 
 class SubmissionDetailsViewModel : ViewModel() {
 
@@ -19,14 +20,16 @@ class SubmissionDetailsViewModel : ViewModel() {
     val isLoading: LiveData<Boolean> = _isLoading
 
     private var loadedId: String? = null
+    private var registration: ListenerRegistration? = null
 
     fun load(activity: Activity, submissionId: String, force: Boolean = false) {
-        if (!force && submissionId == loadedId && _submission.value != null) return
+        if (!force && submissionId == loadedId && registration != null) return
         loadedId = submissionId
         _isLoading.value = true
-        FirebaseManager(activity).fetchSubmissionById(
+        registration?.remove()
+        registration = FirebaseManager(activity).listenSubmissionById(
             submissionId = submissionId,
-            onSuccess = {
+            onUpdate = {
                 _submission.value = it
                 _isLoading.value = false
             },
@@ -35,5 +38,11 @@ class SubmissionDetailsViewModel : ViewModel() {
                 _isLoading.value = false
             }
         )
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        registration?.remove()
+        registration = null
     }
 }

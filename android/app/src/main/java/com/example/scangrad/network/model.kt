@@ -20,7 +20,28 @@ data class EvaluationResponse(
 data class QuestionEvaluation(
     @SerializedName("question_id") val questionId: String = "",
     @SerializedName("question_text") val questionText: String = "",
+    @SerializedName("student_answer") val studentAnswer: String = "",
     @SerializedName("score") val score: Double = 0.0,
     @SerializedName("max_score") val maxScore: Double = 0.0,
     @SerializedName("explanation") val explanation: String = ""
+)
+
+data class IngestRequest(
+    @SerializedName("course_code") val courseCode: String,
+    @SerializedName("year") val year: String,
+    @SerializedName("semester") val semester: String,
+    @SerializedName("moed") val moed: String,
+    @SerializedName("version") val version: String = "v1",
+    @SerializedName("questions_text") val questionsText: String? = null,
+    @SerializedName("questions_url") val questionsUrl: String? = null,
+    @SerializedName("answer_key_text") val answerKeyText: String? = null,
+    @SerializedName("answer_key_url") val answerKeyUrl: String? = null
+)
+
+data class IngestResponse(
+    @SerializedName("doc_id") val docId: String = "",
+    @SerializedName("chunks_added") val chunksAdded: Int = 0,
+    @SerializedName("chunk_ids") val chunkIds: List<String> = emptyList(),
+    @SerializedName("chunk_types") val chunkTypes: Map<String, Int> = emptyMap(),
+    @SerializedName("mode") val mode: String = ""
 )

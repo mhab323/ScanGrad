@@ -334,6 +334,31 @@ class FirebaseManager(private val activity: Activity) {
             }
     }
 
+    /**
+     * Live version of [fetchSubmissionById]. Emits the submission every time the
+     * doc changes — so a details screen opened while grading is still running
+     * flips from the in-progress animation to the final grade on its own.
+     * Caller must remove() the registration when done.
+     */
+    fun listenSubmissionById(
+        submissionId: String,
+        onUpdate: (Submission) -> Unit,
+        onFailed: (String) -> Unit
+    ): ListenerRegistration {
+        return FirebaseFirestore.getInstance()
+            .collection("submissions")
+            .document(submissionId)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    Log.e("FirebaseManager", "listenSubmissionById failed", error)
+                    onFailed(error.localizedMessage ?: "Failed to listen to submission")
+                    return@addSnapshotListener
+                }
+                val submission = snapshot?.toObject(Submission::class.java)
+                if (submission != null) onUpdate(submission)
+            }
+    }
+
     fun fetchSubmissionById(
         submissionId: String,
         onSuccess: (Submission) -> Unit,

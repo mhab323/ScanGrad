@@ -1,170 +1,289 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_gray">
+    android:background="@color/canvas">
 
     <ProgressBar
         android:id="@+id/pb_loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:indeterminateTint="@color/primary"
         android:visibility="gone" />
+
+    <!-- Top app bar -->
+    <RelativeLayout
+        android:layout_marginTop="40dp"
+        android:id="@+id/top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/canvas"
+        android:paddingHorizontal="12dp">
+
+        <ImageView
+            android:id="@+id/tv_back"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:padding="8dp"
+            android:src="@drawable/ic_chevron_left"
+            app:tint="@color/primary" />
+
+        <TextView
+            android:id="@+id/tv_exam_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:ellipsize="end"
+            android:fontFamily="@font/plus_jakarta"
+            android:maxLines="1"
+            android:text="Exam Details"
+            android:textColor="@color/on_surface"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:padding="9dp"
+            android:src="@drawable/ic_tune"
+            app:tint="@color/on_surface_variant" />
+    </RelativeLayout>
 
     <ScrollView
         android:id="@+id/sv_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/top_bar"
         android:clipToPadding="false"
         android:paddingBottom="24dp"
         android:scrollbars="none">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="24dp">
+            android:orientation="vertical"
+            android:paddingHorizontal="20dp"
+            android:paddingTop="8dp">
 
-            <TextView
-                android:id="@+id/tv_back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:padding="4dp"
-                android:text="‹ Back"
-                android:textColor="@color/primary_blue"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <RelativeLayout
+            <!-- Header card -->
+            <LinearLayout
                 android:id="@+id/card_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tv_back"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/rounded_edittext_bg"
+                android:background="@drawable/bg_card"
+                android:orientation="vertical"
                 android:padding="20dp">
 
                 <TextView
-                    android:id="@+id/tv_student_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="STUDENT"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="11sp"
-                    android:textStyle="bold" />
+                    android:textAppearance="@style/TextAppearance.SG.LabelCaps"
+                    android:text="STUDENT SUBMISSION" />
 
                 <TextView
                     android:id="@+id/tv_student_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/tv_student_label"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="6dp"
+                    android:fontFamily="@font/plus_jakarta"
                     android:text="—"
-                    android:textColor="@color/text_primary"
-                    android:textSize="20sp"
+                    android:textColor="@color/on_surface"
+                    android:textSize="26sp"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/tv_exam_subtitle"
+                    android:id="@+id/tv_exam_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/tv_student_name"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/plus_jakarta"
+                    android:text="—"
+                    android:textColor="@color/on_surface"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_exam_meta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:text="—"
-                    android:textColor="@color/text_secondary"
+                    android:textColor="@color/on_surface_variant"
                     android:textSize="13sp" />
 
-                <TextView
-                    android:id="@+id/tv_grade_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/tv_exam_subtitle"
-                    android:layout_marginTop="20dp"
-                    android:text="OVERALL GRADE"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="11sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_overall_grade"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/tv_grade_label"
-                    android:layout_marginTop="4dp"
-                    android:text="0"
-                    android:textColor="@color/primary_blue"
-                    android:textSize="36sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_overall_grade_max"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBaseline="@id/tv_overall_grade"
-                    android:layout_toEndOf="@id/tv_overall_grade"
-                    android:layout_marginStart="6dp"
-                    android:text="/ 100"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/tv_feedback_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/tv_overall_grade"
-                    android:layout_marginTop="20dp"
-                    android:text="OVERALL FEEDBACK"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="11sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_overall_feedback"
+                <!-- Feedback quote with left accent -->
+                <LinearLayout
+                    android:id="@+id/layout_feedback_quote"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/tv_feedback_label"
-                    android:layout_marginTop="4dp"
-                    android:text="—"
-                    android:textColor="@color/text_primary"
-                    android:textSize="14sp" />
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/bg_quote"
+                    android:orientation="horizontal"
+                    android:paddingVertical="12dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="12dp">
 
-            </RelativeLayout>
+                    <TextView
+                        android:id="@+id/tv_overall_feedback"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter"
+                        android:text="—"
+                        android:textColor="@color/on_surface"
+                        android:textSize="14sp"
+                        android:textStyle="italic" />
+                </LinearLayout>
 
-            <TextView
-                android:id="@+id/tv_questions_header"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/card_header"
-                android:layout_marginTop="24dp"
-                android:text="Per-Question Breakdown"
-                android:textColor="@color/text_primary"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                <!-- Grade ring -->
+                <RelativeLayout
+                    android:id="@+id/layout_grade_ring"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_questions"
+                    <FrameLayout
+                        android:id="@+id/ring_wrap"
+                        android:layout_width="96dp"
+                        android:layout_height="96dp"
+                        android:layout_centerHorizontal="true">
+
+                        <com.google.android.material.progressindicator.CircularProgressIndicator
+                            android:id="@+id/progress_grade"
+                            android:layout_width="96dp"
+                            android:layout_height="96dp"
+                            android:layout_gravity="center"
+                            android:indeterminate="false"
+                            android:progress="0"
+                            app:indicatorColor="@color/grade_high"
+                            app:indicatorSize="96dp"
+                            app:trackColor="@color/surface_container"
+                            app:trackThickness="7dp" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tv_overall_grade"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/plus_jakarta"
+                                android:text="0"
+                                android:textColor="@color/on_surface"
+                                android:textSize="28sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv_overall_grade_max"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="/ 100"
+                                android:textColor="@color/on_surface_variant"
+                                android:textSize="11sp" />
+                        </LinearLayout>
+                    </FrameLayout>
+
+                    <TextView
+                        android:id="@+id/tv_grade_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/ring_wrap"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/pill_grade_high"
+                        android:paddingHorizontal="14dp"
+                        android:paddingVertical="6dp"
+                        android:text="PASSING GRADE"
+                        android:textColor="@color/grade_high"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.04" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <!-- Question breakdown header -->
+            <RelativeLayout
+                android:id="@+id/layout_questions_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tv_questions_header"
+                android:layout_marginTop="24dp">
+
+                <TextView
+                    android:id="@+id/tv_questions_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:textAppearance="@style/TextAppearance.SG.Title"
+                    android:text="Question Breakdown" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_questions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:nestedScrollingEnabled="false"
-                tools:listitem="@layout/item_question_evaluation" />
+                android:orientation="vertical" />
 
             <TextView
                 android:id="@+id/tv_empty"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/rv_questions"
                 android:layout_marginTop="12dp"
                 android:gravity="center"
                 android:text="No question breakdown available."
-                android:textColor="@color/text_secondary"
+                android:textColor="@color/on_surface_variant"
                 android:textSize="13sp"
                 android:visibility="gone" />
 
-        </RelativeLayout>
+        </LinearLayout>
     </ScrollView>
+
+    <!--
+      In-progress state: a self-contained card centered in the screen, shown
+      while the submission is still being graded. Sits on top of (and replaces)
+      the scroll content. Holds the student name + course/date, the Lottie
+      animation, and the status title.
+    -->
+    <LinearLayout
+        android:id="@+id/layout_grading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottie_grading"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/grading_animation" />
+
+        <TextView
+            android:id="@+id/tv_grading_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/plus_jakarta"
+            android:gravity="center"
+            android:text="Waiting for grading"
+            android:textColor="@color/on_surface"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
 </RelativeLayout>
