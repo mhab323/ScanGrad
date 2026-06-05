@@ -37,8 +37,6 @@ On startup the backend publishes its **local IP** to Firebase Firestore, so the 
 
 ## 📸 App Screenshots
 
-> Screenshots live in the [`screenshots/`](screenshots/) folder. Capture each screen and save it under the filename listed below.
-
 <div align="center">
 
 | Splash | Login | Sign Up |
