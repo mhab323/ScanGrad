@@ -66,10 +66,10 @@ ScanGrad uses a **monorepo** that keeps the Android frontend and Python backend 
 ```
 ┌──────────────────────────┐                       ┌────────────────────────────────────────┐
 │      Android Client       │                       │            FastAPI Backend             │
-│   (Kotlin · MVVM · CameraX)│                       │         (LangChain · RAG Engine)        │
+│  (Kotlin · MVVM · CameraX)│                       │         (LangChain · RAG Engine)       │
 │                           │                       │                                        │
 │  Camera / Upload          │   POST /api/evaluate  │   OCR (RapidOCR + pdfium)              │
-│  Validate extracted text  │ ────────────────────▶ │      │                                 │
+│  Validate extracted text  │ ────────────────────▶│      │                                 │
 │  View per-question grades │                       │      ▼                                 │
 │                           │ ◀──────────────────── │   RAG Generator                        │
 │                           │  EvaluationResponse   │   1. Multi-query expansion (llama3.2)  │
